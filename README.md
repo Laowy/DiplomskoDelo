@@ -1,0 +1,3 @@
+# DiplomskoDelo
+
+my Diploma project
