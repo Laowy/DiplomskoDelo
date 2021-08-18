@@ -7,24 +7,24 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="RelationControlUI.xaml.cs">
+    <Compile Update="View\RelationControlUI.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="textInputUserControl.xaml.cs">
+    <Compile Update="View\textInputUserControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="textInputWindow.xaml.cs">
+    <Compile Update="View\textInputWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="RelationControlUI.xaml">
+    <Page Update="View\RelationControlUI.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="textInputUserControl.xaml">
+    <Page Update="View\textInputUserControl.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="textInputWindow.xaml">
+    <Page Update="View\textInputWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

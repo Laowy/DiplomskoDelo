@@ -33,7 +33,7 @@ namespace DiplomskoDelo
             storyEventListBox.SelectedIndex = 0;//this too
 
             // eventLogListBox.ItemsSource = VM.ActiveEvent.StoryEventRelations;//set event relation log
-            extraNotesListBox.ItemsSource = VM.ActiveEvent.StoryEventNotes;//set notes for current event
+            // extraNotesListBox.ItemsSource = VM.ActiveEvent.StoryEventNotes;//set notes for current event
         }
 
         private void storyEventListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -42,7 +42,7 @@ namespace DiplomskoDelo
 
             eventLogListBox.ItemsSource = VM.ActiveEvent.StoryEventRelations;//set event relation log
 
-            extraNotesListBox.ItemsSource = VM.ActiveEvent.StoryEventNotes;//set notes for current event
+            //extraNotesListBox.ItemsSource = VM.ActiveEvent.StoryEventNotes;//set notes for current event
         }
 
         private void addRelationButton_Click(object sender, RoutedEventArgs e)
@@ -77,12 +77,12 @@ namespace DiplomskoDelo
 
         private void extraNotesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            extraNotesListBox.ItemsSource = VM.ActiveEvent.StoryEventNotes;
+            //extraNotesListBox.ItemsSource = VM.ActiveEvent.StoryEventNotes;
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (MapTab.IsSelected)
+            /*if (MapTab.IsSelected)
             {
                 charactersListBox.ItemsSource = VM.CharacterList;
                 eventLogListBox.ItemsSource = VM.ActiveEvent.StoryEventRelations;
@@ -105,7 +105,7 @@ namespace DiplomskoDelo
                 charactersListBox.ItemsSource = VM.CharacterList;
                 eventLogListBox.ItemsSource = VM.ActiveEvent.StoryEventRelations;
                 extraNotesListBox.ItemsSource = VM.ActiveEvent.StoryEventNotes;
-            }
+            }*/
         }
 
         private void Window_GotFocus(object sender, RoutedEventArgs e)
