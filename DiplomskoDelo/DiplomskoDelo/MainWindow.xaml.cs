@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace DiplomskoDelo
     /// </summary>
     public partial class MainWindow : Window
     {
-        private storyViewModel VM = new storyViewModel();
+        private StoryViewModel VM = new StoryViewModel();
 
         public MainWindow()
         {
@@ -34,6 +35,16 @@ namespace DiplomskoDelo
 
             // eventLogListBox.ItemsSource = VM.ActiveEvent.StoryEventRelations;//set event relation log
             // extraNotesListBox.ItemsSource = VM.ActiveEvent.StoryEventNotes;//set notes for current event
+        }
+
+        public BitmapImage UrlToImageSource(string url)
+        {
+            var bitmapImage = new BitmapImage();
+            bitmapImage.BeginInit();
+            bitmapImage.UriSource = new Uri("https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/187738_100000230436565_1427264428_q.jpg"); ;
+            bitmapImage.EndInit();
+
+            return bitmapImage;
         }
 
         private void storyEventListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -59,6 +70,13 @@ namespace DiplomskoDelo
 
         private void editMapImageButton_Click(object sender, RoutedEventArgs e)
         {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Image files (*.png;*.jpg)|*.png;*.jpg";
+            if (ofd.ShowDialog() == true)
+            {
+                VM.ActiveEvent.StoryEventMapSource = ofd.FileName;
+                // mapImage.Source = UrlToImageSource(VM.ActiveEvent.StoryEventMapSource);
+            }
         }
 
         private void editCharacterAttributeButton_Click(object sender, RoutedEventArgs e)

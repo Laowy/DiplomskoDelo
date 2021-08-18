@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DiplomskoDelo"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance Type=local:storyViewModel}"
-        Title="MainWindow" Height="450" Width="800" Background="AliceBlue" GotFocus="Window_GotFocus">
+        d:DataContext="{d:DesignInstance Type=local:StoryViewModel}"
+        Title="VRENKO" Height="450" Width="800" Background="AliceBlue" GotFocus="Window_GotFocus">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -26,7 +26,7 @@
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
                     <Canvas x:Name="mapCanvas" Background="AntiqueWhite" Grid.Column="0" Grid.RowSpan="2" Margin="5">
-                        <Image  Width="{Binding Path=ActualWidth, ElementName=mapCanvas}" Height="{Binding Path=ActualHeight, ElementName=mapCanvas}" Stretch="Uniform" />
+                        <Image x:Name="mapImage" Source="{Binding ActiveEvent.StoryEventMapSource}" Width="{Binding Path=ActualWidth, ElementName=mapCanvas}" Height="{Binding Path=ActualHeight, ElementName=mapCanvas}" Stretch="Uniform" />
                     </Canvas>
                     <TextBox Text="Lorem Ipsum" Margin="5"  Grid.Column="1" Grid.Row="0" ></TextBox>
                     <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
@@ -37,6 +37,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="2" Orientation="Horizontal">
                         <TextBlock Text="{Binding ActiveEvent.StoryEventName}" Margin="5" />
+                        <TextBlock Text="Time: " Margin="5" />
                         <TextBlock Text="{Binding ActiveEvent.StoryEventTime}" Margin="5" />
                     </StackPanel>
                 </Grid>
@@ -53,7 +54,12 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
-                    <ListBox  x:Name="charactersListBox" ItemsSource="{Binding CharacterList}"  ScrollViewer.VerticalScrollBarVisibility="Visible" DisplayMemberPath="EntityName" SelectionChanged="charactersListBox_SelectionChanged" Grid.RowSpan="2" Margin="5,5,5,5" Grid.Column="0" Background="AntiqueWhite">
+                    <ListBox  x:Name="charactersListBox" ItemsSource="{Binding CharacterList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="charactersListBox_SelectionChanged" Grid.RowSpan="2" Margin="5,5,5,5" Grid.Column="0"  Background="AntiqueWhite">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding EntityName}" TextWrapping="Wrap" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
                     </ListBox>
 
                     <ListBox x:Name="characterNotesListBox" ItemsSource="{Binding ActiveEntity.EntityAttributes}" ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.RowSpan="2" Margin="5" SelectionChanged="characterNotesListBox_SelectionChanged" Grid.Column="1" Background="AntiqueWhite">
@@ -77,7 +83,7 @@
                         <ColumnDefinition Width="3*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <ListBox x:Name="eventLogListBox" ItemsSource="{Binding ActiveEvent.StoryEventRelations}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="5">
+                    <ListBox x:Name="eventLogListBox" Background="AntiqueWhite" ItemsSource="{Binding ActiveEvent.StoryEventRelations}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="5">
 
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
@@ -90,7 +96,7 @@
                                 <StackPanel Orientation="Horizontal">
 
                                     <TextBlock TextWrapping="Wrap" Text="{Binding FirstEntity.EntityName}" Margin="5" />
-                                    <TextBlock Background="AntiqueWhite" TextWrapping="Wrap" Text="{Binding RelationName}" Margin="5" />
+                                    <TextBlock Background="LightPink" TextWrapping="Wrap" Padding="2" Text="{Binding RelationName}" Margin="5" />
                                     <TextBlock TextWrapping="Wrap" Text="{Binding SecondEntity.EntityName}" Margin="5" />
                                 </StackPanel>
                             </DataTemplate>
@@ -117,7 +123,7 @@
                         <ColumnDefinition Width="3*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <ListBox x:Name="extraNotesListBox" ItemsSource="{Binding ActiveEvent.StoryEventNotes}" SelectionChanged="extraNotesListBox_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="5">
+                    <ListBox x:Name="extraNotesListBox" Background="AntiqueWhite" ItemsSource="{Binding ActiveEvent.StoryEventNotes}" SelectionChanged="extraNotesListBox_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="5">
 
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 namespace DiplomskoDelo
 {
@@ -16,7 +18,7 @@ namespace DiplomskoDelo
         private bool isProactive;
 
 #nullable enable
-        private Bitmap? eventMap;// nullable
+        private string? eventMap;// nullable
 #nullable disable
 
         private List<Relation> interactions;
@@ -86,7 +88,7 @@ namespace DiplomskoDelo
             }
         }
 
-        public Bitmap StoryEventMapImage
+        public string StoryEventMapSource
         {
             get
             {
@@ -95,7 +97,7 @@ namespace DiplomskoDelo
             set
             {
                 eventMap = value;
-                OnPropertyChanged("StoryEventMapImage");
+                OnPropertyChanged("StoryEventMapSource");
             }
         }
 
