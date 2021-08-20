@@ -1,0 +1,41 @@
+﻿<Window x:Class="DiplomskoDelo.RelationControlUI"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:DiplomskoDelo" d:DataContext="{d:DesignInstance Type=local:StoryViewModel}"
+             mc:Ignorable="d"
+             d:Height="300" d:Width="400" Background="AntiqueWhite">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="5">
+            <Label Content="Relation Editor: " />
+            <CheckBox Content="Is entity 1 a group?" IsChecked="{Binding IsEntity1Group}" Margin="5" />
+            <CheckBox Content="Is entity 2 a group?" IsChecked="{Binding IsEntity2Group}" Margin="5" />
+            <CheckBox x:Name="selfTargetedRelationCheckbox" Content="Is the source also the target?" IsChecked="{Binding IsRelationSelfTargeted}" Margin="5" />
+            <Label Content="Relation name: " />
+            <TextBox x:Name="relationNameTextBox" Text="{Binding NewRelationName}" Margin="5" />
+        </StackPanel>
+        <StackPanel Grid.Column="1" Margin="5">
+            <Label Content="Entity 1 (Source):" />
+            <ComboBox x:Name="entity1ComboBox" Margin="5" ItemsSource="{Binding CharacterList}" DisplayMemberPath="EntityName"  SelectedItem="{Binding ChosenEntity1}" />
+            <Label Content="Entity 2 (Target):" />
+            <ComboBox  x:Name="entity2ComboBox" Margin="5" ItemsSource="{Binding CharacterList}" DisplayMemberPath="EntityName" SelectedItem="{Binding ChosenEntity2}" />
+        </StackPanel>
+        <Button Grid.Column="1" Grid.Row="1"  Content="Save Relation" Command="{Binding Path=UpdateCommad}" Margin="5" VerticalAlignment="Top" Click="Button_Click" />
+        <TextBlock x:Name="isSavedTextBlock" Text="Lorem Ipsum" Margin="5" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
+        <StackPanel Grid.Row="1">
+            <Button x:Name="previewRelationButton" Content="Preview Relation" Margin="5" Click="previewRelationButton_Click" />
+            <TextBlock x:Name="relationPreviewTextBlock" Text="Lorem Ipsum" Margin="5" />
+        </StackPanel>
+    </Grid>
+</Window>
