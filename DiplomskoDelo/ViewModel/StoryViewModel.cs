@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.IO;
+using System.Windows.Controls;
 
 namespace DiplomskoDelo
 {
@@ -17,15 +18,19 @@ namespace DiplomskoDelo
         //main storage objects
         public Dictionary<string, BitmapImage> MapDictionary { get { return imageDict; } set { imageDict = value; OnPropertyChanged("ImageDictionary"); } }
 
+        public List<System.Windows.Point> ScaledMapMarkers { get => scaledMapMarkers; set { scaledMapMarkers = value; OnPropertyChanged("ScaledMapMarkers"); } }
         public List<StoryEvent> StoryTimeline { get => (List<StoryEvent>)_storyTimeline; set { _storyTimeline = value; OnPropertyChanged("StoryTimeline"); } }
         public List<Entity> CharacterList { get => (List<Entity>)_characterList; set { _characterList = value; OnPropertyChanged("CharacterList"); } }
 
         //currently active units
         public StoryEvent ActiveEvent { get => activeEvent; set { activeEvent = value; OnPropertyChanged("ActiveEvent"); } }
 
-        public string ActiveAttribute { get => activeAttribute; set { activeAttribute = value; OnPropertyChanged("ActiveAttribute"); } }
-
         public Entity ActiveEntity { get => activeEntity; set { activeEntity = value; OnPropertyChanged("ActiveEntity"); } }
+
+        public string ActiveAttribute { get => activeAttribute; set { activeAttribute = value; OnPropertyChanged("ActiveAttribute"); } }
+        public string ActiveNote { get => activeNote; set { activeNote = value; OnPropertyChanged("ActiveNote"); } }
+
+        public MapMarker ActiveMapMarker { get => activeMapMarker; set { activeMapMarker = value; OnPropertyChanged("ActiveMapMarker"); } }
 
         //relation properties
         public string NewRelationName { get => newRelationName; set { newRelationName = value; OnPropertyChanged("NewRelationName"); } }
@@ -73,14 +78,34 @@ namespace DiplomskoDelo
             _storyTimeline[2].StoryEventNotes.Add("Podrobnost 6");
         }
 
-        public BitmapImage UrlToImageSource(string url)
+        public void AddNewMapMarker(Canvas canvas, System.Windows.Point click, string text)
         {
-            var bitmapImage = new BitmapImage();
-            bitmapImage.BeginInit();
-            bitmapImage.UriSource = new Uri("https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/187738_100000230436565_1427264428_q.jpg"); ;
-            bitmapImage.EndInit();
+            canvas.Children.Clear();
+            double wide = canvas.ActualWidth;
+            double high = canvas.ActualHeight;
 
-            return bitmapImage;
+            activeEvent.StoryEventMapMarkers.Add(new MapMarker((float)(wide / click.X), (float)(high / click.Y), text));
+        }
+
+        public void UpdateAllMapMarkers(Canvas canvas, System.Windows.Point click)
+        {
+            canvas.Children.Clear();
+            double wide = canvas.ActualWidth;
+            double high = canvas.ActualHeight;
+            for (int i = 0; i < activeEvent.StoryEventMapMarkers.Count; i++)
+            {
+            }
+        }
+
+        public void AddNewEventNote(string text)
+        {
+            activeEvent.StoryEventNotes.Add(text);
+        }
+
+        public void EditEventNote(string text)
+        {
+            string temp = activeNote;
+            activeEvent.StoryEventNotes[activeEvent.StoryEventNotes.IndexOf(temp)] = activeNote = text;
         }
 
         public void AddStoryEvent(string title, string time)
@@ -97,6 +122,14 @@ namespace DiplomskoDelo
             {
                 _storyTimeline.Insert(_storyTimeline.IndexOf(activeEvent) + 1, new StoryEvent(title, time));
             }
+        }
+
+        public void EditStoryEvent(string title, string time)
+        {
+            var temp = activeEvent;
+            activeEvent.StoryEventName = title;
+            activeEvent.StoryEventTime = time;
+            _storyTimeline[_storyTimeline.IndexOf(temp)] = activeEvent;
         }
 
         public void AddNewEntityAttribute(string attribute)
@@ -153,19 +186,32 @@ namespace DiplomskoDelo
             return;
         }
 
+        //LASTNOSTI
         private ICommand mUpdater;
+
+        //glavne podatkovne strukture
+        private IList<StoryEvent> _storyTimeline;
+
+        private IList<Entity> _characterList;
+        private Dictionary<string, BitmapImage> imageDict;
+
+        //za trenutno izbrane objekte
+        private StoryEvent activeEvent;
+
+        private Entity activeEntity;
+        private string activeAttribute;
+        private string activeNote;
+
+        //za relacijski vmesnik
         private string newRelationName;
+
         private Entity chosenEntity1;
         private Entity chosenEntity2;
         private bool isEntity1Group;
         private bool isEntity2Group;
         private bool isRelationSelfTargeted;
-        private IList<Entity> _characterList;
-        private IList<StoryEvent> _storyTimeline;
-        private StoryEvent activeEvent;
-        private Entity activeEntity;
-        private string activeAttribute;
-        private Dictionary<string, BitmapImage> imageDict;
+        private MapMarker activeMapMarker;
+        private List<System.Windows.Point> scaledMapMarkers;
 
         public ICommand UpdateCommand
         {
