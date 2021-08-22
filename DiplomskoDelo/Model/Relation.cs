@@ -9,15 +9,20 @@ namespace DiplomskoDelo
 {
     internal class Relation : INotifyPropertyChanged
     {
-        private bool isFirstMany;
-        private bool isSecondMany;
-        private bool isSelfTargeted;
-        private string relationName;//in past tense neutrum
-        private Entity firstEntity;
-#nullable enable
-        private Entity? secondEntity;//nullable
-#nullable disable
+        //Polja
+        private string relationName;//ime relacije v pretekliku
 
+        private Entity firstEntity;//prva entiteta v relaciji (vir)
+
+        private Entity secondEntity;//druga entiteta v relaciji (tarča)
+                                    //nastavi se na posebno vrednost, v primeru refleksivne relacije
+
+        private bool isSelfTargeted;//ali je relacija refleksivna (vir vpliva nase, ne na entiteto 2)
+
+        private bool isFirstMany;// za opis števnosti entitete 1
+        private bool isSecondMany;// za opis števnosti entitete 2
+
+        //konstruktor
         public Relation(string name, bool firstMany, bool secondMany, bool isSelf, Entity first, Entity second)
         {
             if (isSelf)

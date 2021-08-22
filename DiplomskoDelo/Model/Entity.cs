@@ -10,16 +10,22 @@ namespace DiplomskoDelo
 {
     internal class Entity : INotifyPropertyChanged
     {
-        private string entityName;
-        private List<string> attributes;
-        private string displayArtSource;
+        //polja:
+        private string entityName;//ime entitete
 
+        private List<string> attributes;//seznam artibutov in lastnosti
+
+        private string displayArtSource;//sistemska pot do vira slike za entiteto
+
+        //Lastnosti
         public string EntityImageSource
         {
+            //funkcija za dostop
             get
             {
                 return displayArtSource;
             }
+            //mutatorska funkcija
             set
             {
                 displayArtSource = value;

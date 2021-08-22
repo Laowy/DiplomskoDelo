@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DiplomskoDelo"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=local:StoryViewModel}"
-        Title="VRENKO" Height="450" Width="800" Background="AliceBlue" GotFocus="Window_GotFocus">
+        Title="VRENKO" Height="500" Width="800" Background="AliceBlue" GotFocus="Window_GotFocus" SizeChanged="Window_SizeChanged">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -25,15 +25,27 @@
                         <RowDefinition Height="4*" />
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
-                    <Canvas x:Name="mapCanvas" Background="AntiqueWhite" Grid.Column="0" Grid.RowSpan="2" Margin="5">
+
+                    <Canvas Grid.Column="0" Grid.RowSpan="2" Background="AntiqueWhite" MouseLeftButtonDown="mapCanvas_MouseLeftButtonDown" x:Name="mapCanvas"  Margin="5">
+
+                        <ItemsControl ItemsSource="{Binding ScaledMapMarkers}">
+                            <DataTemplate>
+
+                                <Rectangle Width="10" Height="10" Stroke="Black" Fill="Black">
+                                    <Rectangle.RenderTransform>
+                                        <TranslateTransform X="{Binding MapMarkerCoordX}" Y="{Binding MapMarkerCoordY}" />
+                                    </Rectangle.RenderTransform>
+                                </Rectangle>
+                            </DataTemplate>
+                        </ItemsControl>
                         <Image x:Name="mapImage" Source="{Binding ActiveEvent.StoryEventMapSource}" Width="{Binding Path=ActualWidth, ElementName=mapCanvas}" Height="{Binding Path=ActualHeight, ElementName=mapCanvas}" Stretch="Fill" />
                     </Canvas>
-                    <TextBox Text="Lorem Ipsum" Margin="5"  Grid.Column="1" Grid.Row="0" ></TextBox>
+                    <TextBox Text="{Binding ActiveMapMarker.MapMarkerNote}" Margin="5"  Grid.Column="1" Grid.Row="0" ></TextBox>
                     <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
                         <Button x:Name="editMapImageButton" Content="Edit Map Image" Margin="5" Click="editMapImageButton_Click" />
-                        <Button Content="Add mapmarker" Margin="5" />
-                        <Button Content="Edit mapmarker" Margin="5" />
-                        <Button Content="Delete mapmarker" Margin="5" />
+                        <Button x:Name="addMapMarkerButton" Content="TODO Add mapmarker" Margin="5" Click="addMapMarkerButton_Click" />
+                        <Button Content="TODO Edit mapmarker" Margin="5" />
+                        <Button Content="TODO Delete mapmarker" Margin="5" />
                     </StackPanel>
                     <StackPanel Grid.Row="2" Orientation="Horizontal">
                         <TextBlock Text="{Binding ActiveEvent.StoryEventName}" Margin="5" />
@@ -74,7 +86,7 @@
                         <Button x:Name="changeEntityImageButton" Click="changeEntityImageButton_Click" Content="Edit image" Margin="5" />
                         <Button x:Name="addCharacterAttributeButton" Click="addCharacterAttributeButton_Click" Content="Add note" Margin="5" />
                         <Button x:Name="editCharacterAttributeButton"  Content="Edit note" Margin="5" Click="editCharacterAttributeButton_Click" />
-                        <Button Content="Delete note" Margin="5" />
+                        <Button Content="TODO Delete note" Margin="5" />
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -107,14 +119,14 @@
                         <Label Content="Event:" />
                         <Button x:Name="addRelationButton" Content="Add action" Margin="5" Click="addRelationButton_Click" />
                         <Button Content="Edit action" Margin="5" />
-                        <Button Content="Delete action" Margin="5" />
+                        <Button Content="TODO Delete action" Margin="5" />
                         <Separator Margin="5" />
                         <Label Content="Timeline:" />
                         <Button x:Name="addNewStoryEventButton" Click="addNewStoryEventButton_Click" Content="Add Next Story Event" Margin="5" />
                         <Button x:Name="editStoryEventButton" Click="editStoryEventButton_Click" Content="Edit Story Event" Margin="5" />
-                        <Button Content="Move Story Event back" Margin="5" />
-                        <Button Content="Move Story Event Forward" Margin="5" />
-                        <Button Content="Delete Story Event " Margin="5" />
+                        <Button Content="TODO Move Story Event back" Margin="5" />
+                        <Button Content="TODO Move Story Event Forward" Margin="5" />
+                        <Button Content="TODO Delete Story Event " Margin="5" />
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -135,9 +147,9 @@
                     </ListBox>
                     <StackPanel Grid.Column="1" Margin="5" Background="AliceBlue">
 
-                        <Button Content="Add note" Margin="5" />
-                        <Button Content="Edit note" Margin="5" />
-                        <Button Content="Delete note" Margin="5" />
+                        <Button x:Name="addEventNoteButton" Click="addEventNoteButton_Click" Content="Add note" Margin="5" />
+                        <Button x:Name="editEventNoteButton" Click="editEventNoteButton_Click" Content="Edit note" Margin="5" />
+                        <Button Content="TODO Delete note" Margin="5" />
                     </StackPanel>
                 </Grid>
             </TabItem>

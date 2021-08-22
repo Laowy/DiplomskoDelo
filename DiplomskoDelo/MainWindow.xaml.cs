@@ -23,6 +23,8 @@ namespace DiplomskoDelo
     public partial class MainWindow : Window
     {
         private StoryViewModel VM = new StoryViewModel();
+        private Point lastMouseClick;
+        private bool areWeAddingMapMarkers = false;
 
         public MainWindow()
         {
@@ -92,6 +94,10 @@ namespace DiplomskoDelo
 
         private void extraNotesListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (extraNotesListBox.SelectedIndex != -1)
+            {
+                VM.ActiveNote = VM.ActiveEvent.StoryEventNotes[extraNotesListBox.SelectedIndex];
+            }
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -158,9 +164,55 @@ namespace DiplomskoDelo
             var dialog = new StoryEventEditorWindow(VM.ActiveEvent.StoryEventName, VM.ActiveEvent.StoryEventTime);
             if (dialog.ShowDialog() == true)
             {
-                VM.AddStoryEvent(dialog.EventNameText, dialog.EventTimeText);
+                VM.EditStoryEvent(dialog.EventNameText, dialog.EventTimeText);
             }
             storyEventListBox.Items.Refresh();
+        }
+
+        private void addMapMarkerButton_Click(object sender, RoutedEventArgs e)
+        {
+            areWeAddingMapMarkers = true;
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            VM.UpdateAllMapMarkers(mapCanvas, lastMouseClick);
+        }
+
+        private void mapCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            lastMouseClick = e.GetPosition((IInputElement)sender);
+            if (areWeAddingMapMarkers)
+            {
+                var dialog = new textInputWindow("");
+
+                if (dialog.ShowDialog() == true)
+                {
+                    VM.AddNewMapMarker(mapCanvas, lastMouseClick, dialog.EditedText);
+                }
+
+                areWeAddingMapMarkers = false;
+            }
+        }
+
+        private void addEventNoteButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new textInputWindow("");
+            if (dialog.ShowDialog() == true)
+            {
+                VM.AddNewEventNote(dialog.EditedText);
+            }
+            extraNotesListBox.Items.Refresh();
+        }
+
+        private void editEventNoteButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new textInputWindow(VM.ActiveNote);
+            if (dialog.ShowDialog() == true)
+            {
+                VM.EditEventNote(dialog.EditedText);
+            }
+            extraNotesListBox.Items.Refresh();
         }
     }
 }

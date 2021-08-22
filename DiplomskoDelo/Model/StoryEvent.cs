@@ -12,18 +12,18 @@ namespace DiplomskoDelo
 {
     internal class StoryEvent : INotifyPropertyChanged
     {
-        private string eventName;
-        private string timeAndDate;
-        private bool affectOthers;
-        private bool isProactive;
+        private string eventName; //ime dogodka
+        private string timeAndDate; //čas dogajanja
+        private bool affectOthers; //ali dogodek vpliva na druge
+        private bool isProactive; //ali je dogodek proaktiven ali reaktiven
+        private List<Relation> interactions; //seznam relacij oz. interakcij znotraj tega dogodka
+        private List<string> notes; //seznam dodatnih zapiskov
 
 #nullable enable
-        private string? eventMap;// nullable
+        private string? eventMap; // sistemska pot do slike zemljevida, ni obvezna
+        private List<MapMarker>? storyEventMapMarkers;
+
 #nullable disable
-
-        private List<Relation> interactions;
-
-        private List<string> notes;
 
         public StoryEvent(string name, string timeDate)
         {
@@ -31,6 +31,8 @@ namespace DiplomskoDelo
             timeAndDate = timeDate;
 
             eventMap = null;
+            storyEventMapMarkers = new List<MapMarker>();
+
             interactions = new List<Relation>();
             notes = new List<string>();
         }
@@ -123,6 +125,18 @@ namespace DiplomskoDelo
             {
                 notes = value;
                 OnPropertyChanged("StoryEventNotes");
+            }
+        }
+
+        public List<MapMarker> StoryEventMapMarkers
+        {
+            get
+            {
+                return storyEventMapMarkers;
+            }
+            set
+            {
+                storyEventMapMarkers = value; OnPropertyChanged("StoryEventMapMarkers");
             }
         }
 
