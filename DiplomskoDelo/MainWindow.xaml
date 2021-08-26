@@ -26,9 +26,11 @@
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
 
-                    <Canvas Grid.Column="0" Grid.RowSpan="2" Background="AntiqueWhite" MouseLeftButtonDown="mapCanvas_MouseLeftButtonDown" x:Name="mapCanvas"  Margin="5">
+                    <Grid Grid.Column="0" Grid.RowSpan="2">
 
-                        <ItemsControl ItemsSource="{Binding ScaledMapMarkers}">
+                        <Canvas Background="AntiqueWhite" MouseLeftButtonDown="mapCanvas_MouseLeftButtonDown" x:Name="mapCanvas"  Margin="5">
+                            <!--
+                         <ItemsControl ItemsSource="{Binding ScaledMapMarkers}">
                             <DataTemplate>
 
                                 <Rectangle Width="10" Height="10" Stroke="Black" Fill="Black">
@@ -38,8 +40,10 @@
                                 </Rectangle>
                             </DataTemplate>
                         </ItemsControl>
-                        <Image x:Name="mapImage" Source="{Binding ActiveEvent.StoryEventMapSource}" Width="{Binding Path=ActualWidth, ElementName=mapCanvas}" Height="{Binding Path=ActualHeight, ElementName=mapCanvas}" Stretch="Fill" />
-                    </Canvas>
+                        -->
+                            <Image x:Name="mapImage" Source="{Binding ActiveEvent.StoryEventMapSource}" Width="{Binding Path=ActualWidth, ElementName=mapCanvas}" Height="{Binding Path=ActualHeight, ElementName=mapCanvas}" Stretch="Fill" />
+                        </Canvas>
+                    </Grid>
                     <TextBox Text="{Binding ActiveMapMarker.MapMarkerNote}" Margin="5"  Grid.Column="1" Grid.Row="0" ></TextBox>
                     <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
                         <Button x:Name="editMapImageButton" Content="Edit Map Image" Margin="5" Click="editMapImageButton_Click" />

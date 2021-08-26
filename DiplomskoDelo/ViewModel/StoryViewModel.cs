@@ -81,6 +81,7 @@ namespace DiplomskoDelo
         public void AddNewMapMarker(Canvas canvas, System.Windows.Point click, string text)
         {
             canvas.Children.Clear();
+
             double wide = canvas.ActualWidth;
             double high = canvas.ActualHeight;
 

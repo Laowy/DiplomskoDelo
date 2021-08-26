@@ -17,6 +17,7 @@ namespace DiplomskoDelo
         public MapMarker(float x, float y, string content)
         {
             markerCoordX = x;
+            markerCoordY = y;
             markerNote = content;
         }
 
