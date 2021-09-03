@@ -21,17 +21,17 @@
             <Label Content="Relation Editor: " />
             <CheckBox Content="Is entity 1 a group?" IsChecked="{Binding IsEntity1Group}" Margin="5" />
             <CheckBox Content="Is entity 2 a group?" IsChecked="{Binding IsEntity2Group}" Margin="5" />
-            <CheckBox x:Name="selfTargetedRelationCheckbox" Content="Is the source also the target?" IsChecked="{Binding IsRelationSelfTargeted}" Margin="5" />
+            <CheckBox x:Name="selfTargetedRelationCheckbox" Content="Is the source also the target?" Margin="5" />
             <Label Content="Relation name: " />
-            <TextBox x:Name="relationNameTextBox" Text="{Binding NewRelationName}" Margin="5" />
+            <TextBox x:Name="relationNameTextBox"  Margin="5" />
         </StackPanel>
         <StackPanel Grid.Column="1" Margin="5">
             <Label Content="Entity 1 (Source):" />
-            <ComboBox x:Name="entity1ComboBox" Margin="5" ItemsSource="{Binding CharacterList}" DisplayMemberPath="EntityName"  SelectedItem="{Binding ChosenEntity1}" />
+            <ComboBox x:Name="entity1ComboBox" Margin="5" ItemsSource="{Binding CharacterList}" DisplayMemberPath="EntityName" />
             <Label Content="Entity 2 (Target):" />
-            <ComboBox  x:Name="entity2ComboBox" Margin="5" ItemsSource="{Binding CharacterList}" DisplayMemberPath="EntityName" SelectedItem="{Binding ChosenEntity2}" />
+            <ComboBox  x:Name="entity2ComboBox" Margin="5" ItemsSource="{Binding CharacterList}" DisplayMemberPath="EntityName" />
         </StackPanel>
-        <Button Grid.Column="1" Grid.Row="1"  Content="Save Relation" Command="{Binding Path=UpdateCommad}" Margin="5" VerticalAlignment="Top" Click="Button_Click" />
+        <Button Grid.Column="1" Grid.Row="1"  Content="Save Relation" Margin="5" VerticalAlignment="Top" Click="Button_Click" />
         <TextBlock x:Name="isSavedTextBlock" Text="Lorem Ipsum" Margin="5" Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
         <StackPanel Grid.Row="1">
             <Button x:Name="previewRelationButton" Content="Preview Relation" Margin="5" Click="previewRelationButton_Click" />

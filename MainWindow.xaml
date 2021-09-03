@@ -17,41 +17,28 @@
             <TabItem x:Name="MapTab" Header="Map">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*" />
-                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="19*" />
+                        <ColumnDefinition Width="128*" />
+                        <ColumnDefinition Width="49*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="5*" />
                         <RowDefinition Height="4*" />
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
+                    <Rectangle Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Fill="AntiqueWhite" Margin="5" />
+                    <Image  Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="5" x:Name="mapImage" MouseLeftButtonDown="mapImage_MouseLeftButtonDown" Source="{Binding ActiveEvent.StoryEventMapSource}" Width="{Binding Path=ActualWidth, ElementName=mapCanvas}" Height="{Binding Path=ActualHeight, ElementName=mapCanvas}" Stretch="Fill" />
+                    <Canvas Grid.Column="0" Grid.RowSpan="2"  x:Name="mapCanvas"  Margin="5" Grid.ColumnSpan="2">
+                    </Canvas>
 
-                    <Grid Grid.Column="0" Grid.RowSpan="2">
-
-                        <Canvas Background="AntiqueWhite" MouseLeftButtonDown="mapCanvas_MouseLeftButtonDown" x:Name="mapCanvas"  Margin="5">
-                            <!--
-                         <ItemsControl ItemsSource="{Binding ScaledMapMarkers}">
-                            <DataTemplate>
-
-                                <Rectangle Width="10" Height="10" Stroke="Black" Fill="Black">
-                                    <Rectangle.RenderTransform>
-                                        <TranslateTransform X="{Binding MapMarkerCoordX}" Y="{Binding MapMarkerCoordY}" />
-                                    </Rectangle.RenderTransform>
-                                </Rectangle>
-                            </DataTemplate>
-                        </ItemsControl>
-                        -->
-                            <Image x:Name="mapImage" Source="{Binding ActiveEvent.StoryEventMapSource}" Width="{Binding Path=ActualWidth, ElementName=mapCanvas}" Height="{Binding Path=ActualHeight, ElementName=mapCanvas}" Stretch="Fill" />
-                        </Canvas>
-                    </Grid>
-                    <TextBox Text="{Binding ActiveMapMarker.MapMarkerNote}" Margin="5"  Grid.Column="1" Grid.Row="0" ></TextBox>
-                    <StackPanel Grid.Column="1" Grid.Row="1" Grid.RowSpan="2">
+                    <TextBlock x:Name="mapMarkerInfoBox" Text="{Binding ActiveMapMarker.MapMarkerNote}" Margin="5,5,5,5"  Grid.Column="2" Grid.Row="0" ></TextBlock>
+                    <StackPanel Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" Background="AliceBlue">
                         <Button x:Name="editMapImageButton" Content="Edit Map Image" Margin="5" Click="editMapImageButton_Click" />
-                        <Button x:Name="addMapMarkerButton" Content="TODO Add mapmarker" Margin="5" Click="addMapMarkerButton_Click" />
-                        <Button Content="TODO Edit mapmarker" Margin="5" />
-                        <Button Content="TODO Delete mapmarker" Margin="5" />
+                        <Button x:Name="addMapMarkerButton" Content="Add mapmarker" Margin="5" Click="addMapMarkerButton_Click" />
+                        <Button x:Name="editMapMarkerButton" Content="Edit mapmarker note" Margin="5" Click="editMapMarkerButton_Click" />
+                        <Button x:Name="deleteMapMarkerButton" Click="deleteMapMarkerButton_Click" Content="Delete mapmarker" Margin="5" />
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="2">
                         <TextBlock Text="{Binding ActiveEvent.StoryEventName}" Margin="5" />
                         <TextBlock Text="Time: " Margin="5" />
                         <TextBlock Text="{Binding ActiveEvent.StoryEventTime}" Margin="5" />
@@ -61,16 +48,17 @@
             <TabItem x:Name="CharactersTab" Header="Characters">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*" />
-                        <ColumnDefinition Width="4*" />
-                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="27*" />
+                        <ColumnDefinition Width="104*" />
+                        <ColumnDefinition Width="523*" />
+                        <ColumnDefinition Width="131*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="4*" />
                         <RowDefinition Height="5*" />
                     </Grid.RowDefinitions>
 
-                    <ListBox  x:Name="charactersListBox" ItemsSource="{Binding CharacterList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="charactersListBox_SelectionChanged" Grid.RowSpan="2" Margin="5,5,5,5" Grid.Column="0"  Background="AntiqueWhite">
+                    <ListBox  x:Name="charactersListBox" ItemsSource="{Binding CharacterList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="charactersListBox_SelectionChanged" Grid.RowSpan="2" Margin="5,5,5,5" Grid.Column="0"  Background="AntiqueWhite" Grid.ColumnSpan="2">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding EntityName}" TextWrapping="Wrap" />
@@ -78,19 +66,19 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <ListBox x:Name="characterNotesListBox" ItemsSource="{Binding ActiveEntity.EntityAttributes}" ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.RowSpan="2" Margin="5" SelectionChanged="characterNotesListBox_SelectionChanged" Grid.Column="1" Background="AntiqueWhite">
+                    <ListBox x:Name="characterNotesListBox" ItemsSource="{Binding ActiveEntity.EntityAttributes}" ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.RowSpan="2" Margin="5,5,5,5" SelectionChanged="characterNotesListBox_SelectionChanged" Grid.Column="2" Background="AntiqueWhite">
                     </ListBox>
-                    <Canvas x:Name="portraitCanvas" Background="AliceBlue" Grid.Column="2" Margin="5">
+                    <Canvas x:Name="portraitCanvas" Background="AliceBlue" Grid.Column="3" Margin="5,5,5,5">
                         <Image x:Name="portraitImage" Source="{Binding ActiveEntity.EntityImageSource}" Width="{Binding Path=ActualWidth, ElementName=portraitCanvas}" Height="{Binding Path=ActualHeight, ElementName=portraitCanvas}" Stretch="Uniform" />
                     </Canvas>
-                    <StackPanel Grid.Column="2" Grid.Row="1">
+                    <StackPanel Grid.Column="2" Grid.ColumnSpan="2" Margin="522,162,0,0" Grid.RowSpan="2" Background="AliceBlue">
                         <Button x:Name="addNewEntityButton" Content="Add new entity" Margin="5" Click="addNewEntityButton_Click" />
                         <Button x:Name="editEntityButton" Content="Edit entity name" Click="editEntityButton_Click" Margin="5" />
 
                         <Button x:Name="changeEntityImageButton" Click="changeEntityImageButton_Click" Content="Edit image" Margin="5" />
                         <Button x:Name="addCharacterAttributeButton" Click="addCharacterAttributeButton_Click" Content="Add note" Margin="5" />
                         <Button x:Name="editCharacterAttributeButton"  Content="Edit note" Margin="5" Click="editCharacterAttributeButton_Click" />
-                        <Button Content="TODO Delete note" Margin="5" />
+                        <Button x:Name="deleteCharacterAttributeButton" Click="deleteCharacterAttributeButton_Click" Content="Delete note" Margin="5" />
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -100,7 +88,7 @@
                         <ColumnDefinition Width="3*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <ListBox x:Name="eventLogListBox" Background="AntiqueWhite" ItemsSource="{Binding ActiveEvent.StoryEventRelations}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="5">
+                    <ListBox x:Name="eventLogListBox" Background="AntiqueWhite" SelectionChanged="eventLogListBox_SelectionChanged" ItemsSource="{Binding ActiveEvent.StoryEventRelations}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="5">
 
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
@@ -122,15 +110,15 @@
                     <StackPanel Grid.Column="1" Margin="5" Background="AliceBlue">
                         <Label Content="Event:" />
                         <Button x:Name="addRelationButton" Content="Add action" Margin="5" Click="addRelationButton_Click" />
-                        <Button Content="Edit action" Margin="5" />
-                        <Button Content="TODO Delete action" Margin="5" />
+                        <Button x:Name="editRelationButton" Content="Edit action" Click="editRelationButton_Click" Margin="5" />
+                        <Button x:Name="deleteRelationButton" Click="deleteRelationButton_Click" Content="Delete action" Margin="5" />
                         <Separator Margin="5" />
                         <Label Content="Timeline:" />
                         <Button x:Name="addNewStoryEventButton" Click="addNewStoryEventButton_Click" Content="Add Next Story Event" Margin="5" />
                         <Button x:Name="editStoryEventButton" Click="editStoryEventButton_Click" Content="Edit Story Event" Margin="5" />
-                        <Button Content="TODO Move Story Event back" Margin="5" />
-                        <Button Content="TODO Move Story Event Forward" Margin="5" />
-                        <Button Content="TODO Delete Story Event " Margin="5" />
+                        <Button x:Name="moveEventForwardButton" Content="Move Story Event Forward" Margin="5" Click="moveEventForwardButton_Click" />
+                        <Button x:Name="moveEventBackButton" Content="Move Story Event back" Margin="5" Click="moveEventBackButton_Click" />
+                        <Button x:Name="deleteEventButton" Content="Delete Story Event " Click="deleteEventButton_Click" Margin="5" />
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -153,7 +141,7 @@
 
                         <Button x:Name="addEventNoteButton" Click="addEventNoteButton_Click" Content="Add note" Margin="5" />
                         <Button x:Name="editEventNoteButton" Click="editEventNoteButton_Click" Content="Edit note" Margin="5" />
-                        <Button Content="TODO Delete note" Margin="5" />
+                        <Button x:Name="deleteEventNoteButton" Click="deleteEventNoteButton_Click" Content="Delete note" Margin="5" />
                     </StackPanel>
                 </Grid>
             </TabItem>

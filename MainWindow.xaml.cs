@@ -35,11 +35,33 @@ namespace DiplomskoDelo
             storyEventListBox.SelectedIndex = 0;//this too
         }
 
+        public void UpdateAllMapmarkers()
+        {
+            mapCanvas.Children.Clear();
+            if (VM.ActiveEvent.StoryEventMapMarkers.Count != 0)
+            {
+                foreach (var marker in VM.ActiveEvent.StoryEventMapMarkers)
+                {
+                    Ellipse ellipse = new Ellipse();
+                    ellipse.Fill = Brushes.Black;
+                    ellipse.Width = 10;
+                    ellipse.Height = 10;
+                    ellipse.StrokeThickness = 2;
+                    ellipse.MouseLeftButtonDown += OnEllipseMouseLeftButtonDown;
+
+                    mapCanvas.Children.Add(ellipse);
+
+                    Canvas.SetLeft(ellipse, (int)(mapCanvas.ActualWidth * marker.MapMarkerRatioX));
+                    Canvas.SetTop(ellipse, (int)(mapCanvas.ActualHeight * marker.MapMarkerRatioY));
+                }
+            }
+        }
+
         public BitmapImage UrlToImageSource(string url)
         {
             var bitmapImage = new BitmapImage();
             bitmapImage.BeginInit();
-            bitmapImage.UriSource = new Uri("https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn2/187738_100000230436565_1427264428_q.jpg"); ;
+            bitmapImage.UriSource = new Uri(url);
             bitmapImage.EndInit();
 
             return bitmapImage;
@@ -47,9 +69,13 @@ namespace DiplomskoDelo
 
         private void storyEventListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            VM.ActiveEvent = VM.StoryTimeline[storyEventListBox.SelectedIndex];
+            if (storyEventListBox.SelectedIndex != -1)
+            {
+                mapCanvas.Children.Clear();
 
-            eventLogListBox.ItemsSource = VM.ActiveEvent.StoryEventRelations;//set event relation log
+                VM.ActiveEvent = VM.StoryTimeline[storyEventListBox.SelectedIndex];
+                UpdateAllMapmarkers();
+            }
         }
 
         private void addRelationButton_Click(object sender, RoutedEventArgs e)
@@ -176,23 +202,46 @@ namespace DiplomskoDelo
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            VM.UpdateAllMapMarkers(mapCanvas, lastMouseClick);
+            UpdateAllMapmarkers();
         }
 
-        private void mapCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void mapImage_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            lastMouseClick = e.GetPosition((IInputElement)sender);
+            lastMouseClick = e.GetPosition(mapCanvas);
+
             if (areWeAddingMapMarkers)
             {
                 var dialog = new textInputWindow("");
+                dialog.Title = "Marker title";
+                dialog.Height = 300;
+                dialog.Width = 300;
 
                 if (dialog.ShowDialog() == true)
                 {
+                    Ellipse ellipse = new Ellipse();
+                    ellipse.Fill = Brushes.Black;
+                    ellipse.Width = 10;
+                    ellipse.Height = 10;
+                    ellipse.StrokeThickness = 2;
+                    ellipse.MouseLeftButtonDown += OnEllipseMouseLeftButtonDown;
+
+                    mapCanvas.Children.Add(ellipse);
+
+                    Canvas.SetLeft(ellipse, lastMouseClick.X - (ellipse.Width / 2));
+                    Canvas.SetTop(ellipse, lastMouseClick.Y - (ellipse.Height / 2));
+
                     VM.AddNewMapMarker(mapCanvas, lastMouseClick, dialog.EditedText);
                 }
 
                 areWeAddingMapMarkers = false;
             }
+        }
+
+        private void OnEllipseMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Ellipse marker = sender as Ellipse;
+            var i = mapCanvas.Children.IndexOf(marker);
+            VM.ActiveMapMarker = VM.ActiveEvent.StoryEventMapMarkers[i];
         }
 
         private void addEventNoteButton_Click(object sender, RoutedEventArgs e)
@@ -213,6 +262,71 @@ namespace DiplomskoDelo
                 VM.EditEventNote(dialog.EditedText);
             }
             extraNotesListBox.Items.Refresh();
+        }
+
+        private void editMapMarkerButton_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new textInputWindow(VM.ActiveMapMarker.MapMarkerNote);
+            if (dialog.ShowDialog() == true)
+            {
+                VM.EditMapMarkerNote(dialog.EditedText);
+            }
+        }
+
+        private void moveEventForwardButton_Click(object sender, RoutedEventArgs e)
+        {
+            VM.MoveActiveEventForward();
+            storyEventListBox.Items.Refresh();
+        }
+
+        private void moveEventBackButton_Click(object sender, RoutedEventArgs e)
+        {
+            VM.MoveActiveEventBack();
+            storyEventListBox.Items.Refresh();
+        }
+
+        private void deleteEventButton_Click(object sender, RoutedEventArgs e)
+        {
+            VM.DeleteActiveEvent();
+            storyEventListBox.Items.Refresh();
+        }
+
+        private void editRelationButton_Click(object sender, RoutedEventArgs e)
+        {
+            VM.EditRelation();
+            eventLogListBox.Items.Refresh();
+        }
+
+        private void eventLogListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (eventLogListBox.SelectedIndex != -1)
+            {
+                VM.ActiveRelation = VM.ActiveEvent.StoryEventRelations[eventLogListBox.SelectedIndex];
+            }
+        }
+
+        private void deleteEventNoteButton_Click(object sender, RoutedEventArgs e)
+        {
+            VM.DeleteEventNote();
+            extraNotesListBox.Items.Refresh();
+        }
+
+        private void deleteCharacterAttributeButton_Click(object sender, RoutedEventArgs e)
+        {
+            VM.DeleteEntityNote();
+            characterNotesListBox.Items.Refresh();
+        }
+
+        private void deleteMapMarkerButton_Click(object sender, RoutedEventArgs e)
+        {
+            VM.DeleteMapmarker();
+            UpdateAllMapmarkers();
+        }
+
+        private void deleteRelationButton_Click(object sender, RoutedEventArgs e)
+        {
+            VM.DeleteRelation();
+            eventLogListBox.Items.Refresh();
         }
     }
 }

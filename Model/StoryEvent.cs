@@ -30,7 +30,7 @@ namespace DiplomskoDelo
             eventName = name;
             timeAndDate = timeDate;
 
-            eventMap = null;
+            eventMap = "";
             storyEventMapMarkers = new List<MapMarker>();
 
             interactions = new List<Relation>();

@@ -21,7 +21,7 @@ namespace DiplomskoDelo
             markerNote = content;
         }
 
-        public float MapMarkerCoordX
+        public float MapMarkerRatioX
         {
             get
             {
@@ -30,11 +30,11 @@ namespace DiplomskoDelo
             set
             {
                 markerCoordX = value;
-                OnPropertyChanged("MapMarkerCoordX");
+                OnPropertyChanged("MapMarkerRatioX");
             }
         }
 
-        public float MapMarkerCoordY
+        public float MapMarkerRatioY
         {
             get
             {
@@ -43,7 +43,7 @@ namespace DiplomskoDelo
             set
             {
                 markerCoordY = value;
-                OnPropertyChanged("MapMarkerCoordY");
+                OnPropertyChanged("MapMarkerRatioY");
             }
         }
 

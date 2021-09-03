@@ -20,12 +20,39 @@ namespace DiplomskoDelo
     /// </summary>
     public partial class RelationControlUI : Window
     {
-        public RelationControlUI()
+        public RelationControlUI(string relationName, int entity1index, int entity2index, bool isReflexive)
         {
             InitializeComponent();
-            relationPreviewTextBlock.Text = isSavedTextBlock.Text = relationNameTextBox.Text = "";
-            entity1ComboBox.SelectedIndex = -1;
-            entity2ComboBox.SelectedIndex = -1;
+
+            relationPreviewTextBlock.Text = isSavedTextBlock.Text = "";
+            relationNameTextBox.Text = relationName;
+            entity1ComboBox.SelectedIndex = entity1index;
+            entity2ComboBox.SelectedIndex = entity2index;
+            selfTargetedRelationCheckbox.IsChecked = isReflexive;
+        }
+
+        public int Entity1Index
+        {
+            get { return entity1ComboBox.SelectedIndex; }
+            set { entity1ComboBox.SelectedIndex = value; }
+        }
+
+        public int Entity2Index
+        {
+            get { return entity2ComboBox.SelectedIndex; }
+            set { entity2ComboBox.SelectedIndex = value; }
+        }
+
+        public string RelationName
+        {
+            get { return relationNameTextBox.Text; }
+            set { relationNameTextBox.Text = value; }
+        }
+
+        public bool IsRelationSelfTargeted
+        {
+            get { return (bool)selfTargetedRelationCheckbox.IsChecked; }
+            set { selfTargetedRelationCheckbox.IsChecked = value; }
         }
 
         private void previewRelationButton_Click(object sender, RoutedEventArgs e)
