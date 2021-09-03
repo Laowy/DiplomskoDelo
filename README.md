@@ -1,3 +1,3 @@
 # DiplomskoDelo
 
-my Diploma project
+Vizialni Reprezentator Entitet, Narative, Kontinutete in Okolice - VRENKO
