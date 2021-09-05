@@ -35,7 +35,7 @@ namespace DiplomskoDelo
         {
             _storyTimeline = new List<StoryEvent>();
             _characterList = new List<Entity>();
-
+            /*
             _characterList.Add(new Entity("Oseba 1"));
             _characterList[0].EntityAttributes.Add("Prva lastnost osebe 1");
             _characterList[0].EntityImageSource = @"C:\Users\Jakob\Desktop\FAXE\DiplomskoDelo\DiplomskoDelo\Images\Lixen token.png"; //relative path is ../Images/Lixen token.png
@@ -63,6 +63,7 @@ namespace DiplomskoDelo
             _storyTimeline[2].StoryEventNotes.Add("Podrobnost 4");
             _storyTimeline[2].StoryEventNotes.Add("Podrobnost 5");
             _storyTimeline[2].StoryEventNotes.Add("Podrobnost 6");
+            */
         }
 
         [JsonConstructor]
@@ -207,7 +208,7 @@ namespace DiplomskoDelo
 
         public void AddNewEntityAttribute(string attribute)
         {
-            activeEntity.EntityAttributes.Add(attribute);
+            ActiveEntity.EntityAttributes.Add(attribute);
         }
 
         public void EditEntityAttribute(string input)

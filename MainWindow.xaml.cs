@@ -44,10 +44,11 @@ namespace DiplomskoDelo
                         foreach (var marker in VM.ActiveEvent.MapMarkers)
                         {
                             Ellipse ellipse = new Ellipse();
-                            ellipse.Fill = Brushes.Black;
+                            ellipse.Fill = Brushes.LimeGreen;
                             ellipse.Width = 10;
                             ellipse.Height = 10;
                             ellipse.StrokeThickness = 2;
+                            ellipse.Stroke = Brushes.Red;
                             ellipse.MouseLeftButtonDown += OnEllipseMouseLeftButtonDown;
 
                             mapCanvas.Children.Add(ellipse);
@@ -166,7 +167,8 @@ namespace DiplomskoDelo
             ofd.Filter = "Image files (*.png;*.jpg)|*.png;*.jpg";
             if (ofd.ShowDialog() == true)
             {
-                VM.ActiveEntity.EntityImageSource = ofd.FileName;
+                string relative = System.IO.Path.GetRelativePath(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), ofd.FileName);
+                VM.ActiveEntity.EntityImageSource = relative;
             }
         }
 
@@ -224,10 +226,11 @@ namespace DiplomskoDelo
                 if (dialog.ShowDialog() == true)
                 {
                     Ellipse ellipse = new Ellipse();
-                    ellipse.Fill = Brushes.Black;
+                    ellipse.Fill = Brushes.LimeGreen;
                     ellipse.Width = 10;
                     ellipse.Height = 10;
                     ellipse.StrokeThickness = 2;
+                    ellipse.Stroke = Brushes.Red;
                     ellipse.MouseLeftButtonDown += OnEllipseMouseLeftButtonDown;
 
                     mapCanvas.Children.Add(ellipse);
@@ -342,11 +345,12 @@ namespace DiplomskoDelo
             VM.ActiveMapMarker = null;
             VM.ActiveNote = null;
             VM.ActiveRelation = null;
-            //JSONconsoleBox.Text = JsonSerializer.Serialize<StoryViewModel>(VM);
+
+            JSONconsoleBox.Text = JsonSerializer.Serialize<StoryViewModel>(VM);
 
             SaveFileDialog savefile = new SaveFileDialog();
             // set a default file name
-            savefile.FileName = "unknown.txt";
+            savefile.FileName = "file.txt";
             // set filters - this can be done in properties as well
             savefile.Filter = "Text files (*.txt)|*.txt|JSON files (*.json)|*.json";
 
@@ -363,15 +367,9 @@ namespace DiplomskoDelo
             ofd.Filter = "Text files (*.txt)|*.txt|JSON files (*.json)|*.json";
             if (ofd.ShowDialog() == true)
             {
-                //VM = new StoryViewModel();
-                VM = JsonSerializer.Deserialize<StoryViewModel>(File.ReadAllText(ofd.FileName));
-                /*
-                VM = new StoryViewModel
-                {
-                    CharacterList = value.CharacterList,
-                    StoryTimeline = value.StoryTimeline
-                };
-                */
+                JSONconsoleBox.Text = File.ReadAllText(ofd.FileName);
+                VM = JsonSerializer.Deserialize<StoryViewModel>(JSONconsoleBox.Text);
+
                 this.DataContext = VM;
                 VM.ActiveEvent = VM.StoryEvents[0]; //this sets the first event in the timeline as active
                 storyEventListBox.SelectedIndex = 0;//this too

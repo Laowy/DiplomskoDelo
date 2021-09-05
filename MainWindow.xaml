@@ -48,17 +48,16 @@
             <TabItem x:Name="CharactersTab" Header="Characters">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="27*" />
-                        <ColumnDefinition Width="104*" />
-                        <ColumnDefinition Width="523*" />
-                        <ColumnDefinition Width="131*" />
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="4*" />
+                        <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="4*" />
                         <RowDefinition Height="5*" />
                     </Grid.RowDefinitions>
 
-                    <ListBox  x:Name="charactersListBox" ItemsSource="{Binding Entitys}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="charactersListBox_SelectionChanged" Grid.RowSpan="2" Margin="5,5,5,5" Grid.Column="0"  Background="AntiqueWhite" Grid.ColumnSpan="2">
+                    <ListBox  x:Name="charactersListBox" ItemsSource="{Binding Entitys}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="charactersListBox_SelectionChanged" Grid.RowSpan="2" Margin="5,5,5,5" Grid.Column="0"  Background="AntiqueWhite">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding EntityName}" TextWrapping="Wrap" />
@@ -66,12 +65,12 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
 
-                    <ListBox x:Name="characterNotesListBox" ItemsSource="{Binding ActiveEntity.EntityAttributes}" ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.RowSpan="2" Margin="5,5,5,5" SelectionChanged="characterNotesListBox_SelectionChanged" Grid.Column="2" Background="AntiqueWhite">
+                    <ListBox x:Name="characterNotesListBox" ItemsSource="{Binding ActiveEntity.EntityAttributes}" ScrollViewer.VerticalScrollBarVisibility="Visible" Background="AntiqueWhite" Grid.RowSpan="2" Margin="5,5,5,5" SelectionChanged="characterNotesListBox_SelectionChanged" Grid.Column="1">
                     </ListBox>
                     <Canvas x:Name="portraitCanvas" Background="AliceBlue" Grid.Column="3" Margin="5,5,5,5">
                         <Image x:Name="portraitImage" Source="{Binding ActiveEntity.EntityImageSource}" Width="{Binding Path=ActualWidth, ElementName=portraitCanvas}" Height="{Binding Path=ActualHeight, ElementName=portraitCanvas}" Stretch="Uniform" />
                     </Canvas>
-                    <StackPanel Grid.Column="2" Grid.ColumnSpan="2" Margin="522,162,0,0" Grid.RowSpan="2" Background="AliceBlue">
+                    <StackPanel Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" Background="AliceBlue">
                         <Button x:Name="addNewEntityButton" Content="Add new entity" Margin="5" Click="addNewEntityButton_Click" />
                         <Button x:Name="editEntityButton" Content="Edit entity name" Click="editEntityButton_Click" Margin="5" />
 
@@ -149,7 +148,7 @@
                 <Grid ScrollViewer.CanContentScroll="True">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="3*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="4*" />
@@ -161,7 +160,8 @@
                         <Label Content="File" Margin="5" />
                         <Button x:Name="saveFileButton" Click="saveFileButton_Click" Content="Save" Margin="5" Padding="5" HorizontalAlignment="Left" />
                     </StackPanel>
-                    <TextBox Grid.Column="1" Grid.RowSpan="2" Margin="5" Background="AntiqueWhite" x:Name="JSONconsoleBox" TextWrapping="Wrap" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" />
+                    <Label Content="Raw JSON:" Grid.Column="1" />
+                    <TextBox Grid.Column="1" Grid.RowSpan="2" Margin="5,30,5,5" Background="AntiqueWhite" x:Name="JSONconsoleBox" TextWrapping="Wrap" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" />
                 </Grid>
             </TabItem>
         </TabControl>

@@ -29,7 +29,7 @@ namespace DiplomskoDelo
             //mutatorska funkcija
             set
             {
-                displayArtSource = value;
+                displayArtSource = System.IO.Path.GetFullPath(value);
                 OnPropertyChanged("EntityImageSource");
             }
         }
