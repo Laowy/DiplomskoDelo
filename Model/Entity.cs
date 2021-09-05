@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Drawing;
+using System.Text.Json.Serialization;
 
 namespace DiplomskoDelo
 {
@@ -57,6 +58,14 @@ namespace DiplomskoDelo
             entityName = name;
             attributes = new List<string>();
             displayArtSource = imgURL;
+        }
+
+        [JsonConstructor]
+        public Entity(string entityname, string entityimagesource, List<string> entityattributes)
+        {
+            entityName = entityname;
+            attributes = entityattributes;
+            displayArtSource = entityimagesource;
         }
 
         public List<string> EntityAttributes

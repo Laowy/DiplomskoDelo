@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace DiplomskoDelo
 {
@@ -23,7 +24,7 @@ namespace DiplomskoDelo
         private bool isSecondMany;// za opis števnosti entitete 2
 
         //konstruktor
-        public Relation(string name, bool firstMany, bool secondMany, bool isSelf, Entity first, Entity second)
+        public Relation(string name, bool isSelf, Entity first, Entity second)
         {
             if (isSelf)
             {
@@ -35,9 +36,26 @@ namespace DiplomskoDelo
             }
             isSelfTargeted = isSelf;
             relationName = name;
-            isFirstMany = firstMany;
-            isSecondMany = secondMany;
+
             firstEntity = first;
+        }
+
+        [JsonConstructor]
+        public Relation(string relationname, bool isfirstMany, bool issecondMany, bool isSelftargeted, Entity firstentity, Entity secondentity)
+        {
+            if (isSelftargeted)
+            {
+                secondEntity = new Entity("SELF");
+            }
+            else
+            {
+                secondEntity = secondentity;
+            }
+            isSelfTargeted = isSelftargeted;
+            relationName = relationname;
+            isFirstMany = isfirstMany;
+            isSecondMany = issecondMany;
+            firstEntity = firstentity;
         }
 
         public bool IsFirstMany

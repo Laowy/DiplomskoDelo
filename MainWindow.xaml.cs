@@ -1,19 +1,14 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Text.Json;
+using System.IO;
+using System.Collections.Generic;
 
 namespace DiplomskoDelo
 {
@@ -22,37 +17,45 @@ namespace DiplomskoDelo
     /// </summary>
     public partial class MainWindow : Window
     {
-        private StoryViewModel VM = new StoryViewModel();
+        private StoryViewModel VM;
         private Point lastMouseClick;
         private bool areWeAddingMapMarkers = false;
 
         public MainWindow()
         {
             InitializeComponent();
+            //VM = new StoryViewModel();
             this.DataContext = VM;
-
+            /*
             VM.ActiveEvent = VM.StoryTimeline[0]; //this sets the first event in the timeline as active
             storyEventListBox.SelectedIndex = 0;//this too
+            */
         }
 
         public void UpdateAllMapmarkers()
         {
             mapCanvas.Children.Clear();
-            if (VM.ActiveEvent.StoryEventMapMarkers.Count != 0)
+            if (VM != null)
             {
-                foreach (var marker in VM.ActiveEvent.StoryEventMapMarkers)
+                if (VM.ActiveEvent != null)
                 {
-                    Ellipse ellipse = new Ellipse();
-                    ellipse.Fill = Brushes.Black;
-                    ellipse.Width = 10;
-                    ellipse.Height = 10;
-                    ellipse.StrokeThickness = 2;
-                    ellipse.MouseLeftButtonDown += OnEllipseMouseLeftButtonDown;
+                    if (VM.ActiveEvent.MapMarkers.Count != 0)
+                    {
+                        foreach (var marker in VM.ActiveEvent.MapMarkers)
+                        {
+                            Ellipse ellipse = new Ellipse();
+                            ellipse.Fill = Brushes.Black;
+                            ellipse.Width = 10;
+                            ellipse.Height = 10;
+                            ellipse.StrokeThickness = 2;
+                            ellipse.MouseLeftButtonDown += OnEllipseMouseLeftButtonDown;
 
-                    mapCanvas.Children.Add(ellipse);
+                            mapCanvas.Children.Add(ellipse);
 
-                    Canvas.SetLeft(ellipse, (int)(mapCanvas.ActualWidth * marker.MapMarkerRatioX));
-                    Canvas.SetTop(ellipse, (int)(mapCanvas.ActualHeight * marker.MapMarkerRatioY));
+                            Canvas.SetLeft(ellipse, (int)(mapCanvas.ActualWidth * marker.MapMarkerRatioX));
+                            Canvas.SetTop(ellipse, (int)(mapCanvas.ActualHeight * marker.MapMarkerRatioY));
+                        }
+                    }
                 }
             }
         }
@@ -73,7 +76,7 @@ namespace DiplomskoDelo
             {
                 mapCanvas.Children.Clear();
 
-                VM.ActiveEvent = VM.StoryTimeline[storyEventListBox.SelectedIndex];
+                VM.ActiveEvent = VM.StoryEvents[storyEventListBox.SelectedIndex];
                 UpdateAllMapmarkers();
             }
         }
@@ -86,7 +89,7 @@ namespace DiplomskoDelo
 
         private void charactersListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            VM.ActiveEntity = VM.CharacterList[charactersListBox.SelectedIndex];
+            VM.ActiveEntity = VM.Entitys[charactersListBox.SelectedIndex];
         }
 
         private void editMapImageButton_Click(object sender, RoutedEventArgs e)
@@ -95,7 +98,10 @@ namespace DiplomskoDelo
             ofd.Filter = "Image files (*.png;*.jpg)|*.png;*.jpg";
             if (ofd.ShowDialog() == true)
             {
-                VM.ActiveEvent.StoryEventMapSource = ofd.FileName;
+                string relative = System.IO.Path.GetRelativePath(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), ofd.FileName);
+                VM.ActiveEvent.StoryEventMapSource = relative;
+
+                //VM.ActiveEvent.StoryEventMapSource = ofd.FileName;
             }
         }
 
@@ -132,7 +138,6 @@ namespace DiplomskoDelo
 
         private void Window_GotFocus(object sender, RoutedEventArgs e)
         {
-            eventLogListBox.ItemsSource = VM.ActiveEvent.StoryEventRelations;
         }
 
         private void addNewEntityButton_Click(object sender, RoutedEventArgs e)
@@ -241,7 +246,7 @@ namespace DiplomskoDelo
         {
             Ellipse marker = sender as Ellipse;
             var i = mapCanvas.Children.IndexOf(marker);
-            VM.ActiveMapMarker = VM.ActiveEvent.StoryEventMapMarkers[i];
+            VM.ActiveMapMarker = VM.ActiveEvent.MapMarkers[i];
         }
 
         private void addEventNoteButton_Click(object sender, RoutedEventArgs e)
@@ -301,7 +306,7 @@ namespace DiplomskoDelo
         {
             if (eventLogListBox.SelectedIndex != -1)
             {
-                VM.ActiveRelation = VM.ActiveEvent.StoryEventRelations[eventLogListBox.SelectedIndex];
+                VM.ActiveRelation = VM.ActiveEvent.Relations[eventLogListBox.SelectedIndex];
             }
         }
 
@@ -327,6 +332,62 @@ namespace DiplomskoDelo
         {
             VM.DeleteRelation();
             eventLogListBox.Items.Refresh();
+        }
+
+        private void saveFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            VM.ActiveAttribute = null;
+            VM.ActiveEntity = null;
+            VM.ActiveEvent = null;
+            VM.ActiveMapMarker = null;
+            VM.ActiveNote = null;
+            VM.ActiveRelation = null;
+            //JSONconsoleBox.Text = JsonSerializer.Serialize<StoryViewModel>(VM);
+
+            SaveFileDialog savefile = new SaveFileDialog();
+            // set a default file name
+            savefile.FileName = "unknown.txt";
+            // set filters - this can be done in properties as well
+            savefile.Filter = "Text files (*.txt)|*.txt|JSON files (*.json)|*.json";
+
+            if (savefile.ShowDialog() == true)
+            {
+                using (StreamWriter sw = new StreamWriter(savefile.FileName))
+                    sw.WriteLine(JSONconsoleBox.Text);
+            }
+        }
+
+        private void openFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Text files (*.txt)|*.txt|JSON files (*.json)|*.json";
+            if (ofd.ShowDialog() == true)
+            {
+                //VM = new StoryViewModel();
+                VM = JsonSerializer.Deserialize<StoryViewModel>(File.ReadAllText(ofd.FileName));
+                /*
+                VM = new StoryViewModel
+                {
+                    CharacterList = value.CharacterList,
+                    StoryTimeline = value.StoryTimeline
+                };
+                */
+                this.DataContext = VM;
+                VM.ActiveEvent = VM.StoryEvents[0]; //this sets the first event in the timeline as active
+                storyEventListBox.SelectedIndex = 0;//this too
+                VM.ActiveAttribute = null;
+                VM.ActiveEntity = null;
+                VM.ActiveEvent = null;
+                VM.ActiveMapMarker = null;
+                VM.ActiveNote = null;
+                VM.ActiveRelation = null;
+
+                storyEventListBox.Items.Refresh();
+                eventLogListBox.Items.Refresh();
+                characterNotesListBox.Items.Refresh();
+                charactersListBox.Items.Refresh();
+                extraNotesListBox.Items.Refresh();
+            }
         }
     }
 }

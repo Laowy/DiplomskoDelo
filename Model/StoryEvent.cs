@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
+using System.Text.Json.Serialization;
 
 namespace DiplomskoDelo
 {
@@ -35,6 +36,21 @@ namespace DiplomskoDelo
 
             interactions = new List<Relation>();
             notes = new List<string>();
+        }
+
+        [JsonConstructor]
+        public StoryEvent(string storyeventname, string StoryEventTime, bool affectothers, bool StoryEventProactivity, List<Relation> relations, List<string> StoryEventNotes, string StoryEventMapSource, List<MapMarker> mapmarkers)
+        {
+            eventName = storyeventname;
+            timeAndDate = StoryEventTime;
+            affectOthers = affectothers;
+            isProactive = StoryEventProactivity;
+
+            eventMap = StoryEventMapSource;
+            storyEventMapMarkers = mapmarkers;
+
+            interactions = relations;
+            notes = StoryEventNotes;
         }
 
         public string StoryEventName
@@ -97,12 +113,12 @@ namespace DiplomskoDelo
             }
             set
             {
-                eventMap = value;
+                eventMap = System.IO.Path.GetFullPath(value);
                 OnPropertyChanged("StoryEventMapSource");
             }
         }
 
-        public List<Relation> StoryEventRelations
+        public List<Relation> Relations
         {
             get
             {
@@ -111,7 +127,7 @@ namespace DiplomskoDelo
             set
             {
                 interactions = value;
-                OnPropertyChanged("StoryEventRelations");
+                OnPropertyChanged("Relations");
             }
         }
 
@@ -128,7 +144,7 @@ namespace DiplomskoDelo
             }
         }
 
-        public List<MapMarker> StoryEventMapMarkers
+        public List<MapMarker> MapMarkers
         {
             get
             {
@@ -136,7 +152,7 @@ namespace DiplomskoDelo
             }
             set
             {
-                storyEventMapMarkers = value; OnPropertyChanged("StoryEventMapMarkers");
+                storyEventMapMarkers = value; OnPropertyChanged("tMapMarkers");
             }
         }
 

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DiplomskoDelo
@@ -14,11 +15,12 @@ namespace DiplomskoDelo
         private float markerCoordY; //na koliko % visine je bil klik
         private string markerNote; //seznam imen na zemljevidu
 
-        public MapMarker(float x, float y, string content)
+        [JsonConstructor]
+        public MapMarker(float MapMarkerRatioX, float MapMarkerRatioY, string MapMarkerNote)
         {
-            markerCoordX = x;
-            markerCoordY = y;
-            markerNote = content;
+            markerCoordX = MapMarkerRatioX;
+            markerCoordY = MapMarkerRatioY;
+            markerNote = MapMarkerNote;
         }
 
         public float MapMarkerRatioX

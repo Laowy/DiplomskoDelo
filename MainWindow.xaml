@@ -58,7 +58,7 @@
                         <RowDefinition Height="5*" />
                     </Grid.RowDefinitions>
 
-                    <ListBox  x:Name="charactersListBox" ItemsSource="{Binding CharacterList}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="charactersListBox_SelectionChanged" Grid.RowSpan="2" Margin="5,5,5,5" Grid.Column="0"  Background="AntiqueWhite" Grid.ColumnSpan="2">
+                    <ListBox  x:Name="charactersListBox" ItemsSource="{Binding Entitys}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" SelectionChanged="charactersListBox_SelectionChanged" Grid.RowSpan="2" Margin="5,5,5,5" Grid.Column="0"  Background="AntiqueWhite" Grid.ColumnSpan="2">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding EntityName}" TextWrapping="Wrap" />
@@ -88,7 +88,7 @@
                         <ColumnDefinition Width="3*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <ListBox x:Name="eventLogListBox" Background="AntiqueWhite" SelectionChanged="eventLogListBox_SelectionChanged" ItemsSource="{Binding ActiveEvent.StoryEventRelations}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="5">
+                    <ListBox x:Name="eventLogListBox" Background="AntiqueWhite" SelectionChanged="eventLogListBox_SelectionChanged" ItemsSource="{Binding ActiveEvent.Relations}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="5">
 
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
@@ -145,11 +145,30 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
+            <TabItem x:Name="FileTab" Header="File">
+                <Grid ScrollViewer.CanContentScroll="True">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="4*" />
+                        <RowDefinition Height="3*" />
+                    </Grid.RowDefinitions>
+                    <StackPanel>
+                        <Label Content="File" Margin="5" />
+                        <Button x:Name="openFileButton" Click="openFileButton_Click" Content="Open" Margin="5" Padding="5" HorizontalAlignment="Left" />
+                        <Label Content="File" Margin="5" />
+                        <Button x:Name="saveFileButton" Click="saveFileButton_Click" Content="Save" Margin="5" Padding="5" HorizontalAlignment="Left" />
+                    </StackPanel>
+                    <TextBox Grid.Column="1" Grid.RowSpan="2" Margin="5" Background="AntiqueWhite" x:Name="JSONconsoleBox" TextWrapping="Wrap" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" />
+                </Grid>
+            </TabItem>
         </TabControl>
 
         <Grid Grid.Row="1">
 
-            <ListBox x:Name="storyEventListBox" ItemsSource="{Binding StoryTimeline}" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionChanged="storyEventListBox_SelectionChanged" Margin="5">
+            <ListBox x:Name="storyEventListBox" ItemsSource="{Binding StoryEvents}" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionChanged="storyEventListBox_SelectionChanged" Margin="5">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" IsItemsHost="True" />

@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using System.IO;
 using System.Windows.Controls;
+using System.Text.Json.Serialization;
 
 namespace DiplomskoDelo
 {
@@ -17,8 +18,8 @@ namespace DiplomskoDelo
     {
         //main storage objects
 
-        public List<StoryEvent> StoryTimeline { get => (List<StoryEvent>)_storyTimeline; set { _storyTimeline = value; OnPropertyChanged("StoryTimeline"); } }
-        public List<Entity> CharacterList { get => (List<Entity>)_characterList; set { _characterList = value; OnPropertyChanged("CharacterList"); } }
+        public List<StoryEvent> StoryEvents { get => (List<StoryEvent>)_storyTimeline; set { _storyTimeline = value; OnPropertyChanged("StoryEvents"); } }
+        public List<Entity> Entitys { get => (List<Entity>)_characterList; set { _characterList = value; OnPropertyChanged("Entitys"); } }
 
         //currently active units
         public StoryEvent ActiveEvent { get => activeEvent; set { activeEvent = value; OnPropertyChanged("ActiveEvent"); } }
@@ -46,23 +47,29 @@ namespace DiplomskoDelo
             _characterList[2].EntityImageSource = @"https://picsum.photos/id/239/300/300";
 
             _storyTimeline.Add(new StoryEvent("Prvi prizor", "torek"));
-            _storyTimeline[0].StoryEventRelations.Add(new Relation("poiskal", false, false, false, new Entity(_characterList[0].EntityName), new Entity(_characterList[2].EntityName)));
-            _storyTimeline[0].StoryEventRelations.Add(new Relation("razjezil", false, false, true, new Entity(_characterList[0].EntityName), new Entity(_characterList[1].EntityName)));
+            _storyTimeline[0].Relations.Add(new Relation("poiskal", false, new Entity(_characterList[0].EntityName), new Entity(_characterList[2].EntityName)));
+            _storyTimeline[0].Relations.Add(new Relation("razjezil", true, new Entity(_characterList[0].EntityName), new Entity(_characterList[1].EntityName)));
             _storyTimeline[0].StoryEventNotes.Add("Podrobnost 1");
 
             _storyTimeline.Add(new StoryEvent("Drugi prizor", "petek"));
-            _storyTimeline[1].StoryEventRelations.Add(new Relation("izgubil", false, false, false, new Entity(_characterList[0].EntityName), new Entity(_characterList[2].EntityName)));
-            _storyTimeline[1].StoryEventRelations.Add(new Relation("ubil", false, false, false, new Entity(_characterList[0].EntityName), new Entity(_characterList[1].EntityName)));
+            _storyTimeline[1].Relations.Add(new Relation("izgubil", false, new Entity(_characterList[0].EntityName), new Entity(_characterList[2].EntityName)));
+            _storyTimeline[1].Relations.Add(new Relation("ubil", false, new Entity(_characterList[0].EntityName), new Entity(_characterList[1].EntityName)));
             _storyTimeline[1].StoryEventNotes.Add("Podrobnost 2");
             _storyTimeline[1].StoryEventNotes.Add("Podrobnost 3");
-            _storyTimeline[1].StoryEventMapSource = @"https://cdn.discordapp.com/attachments/778442718551867402/881898742024929360/lobotomite.png";
 
             _storyTimeline.Add(new StoryEvent("Tretji prizor", "nedelja"));
-            _storyTimeline[2].StoryEventRelations.Add(new Relation("žaloval", false, false, true, new Entity(_characterList[0].EntityName), new Entity(_characterList[1].EntityName)));
-            _storyTimeline[2].StoryEventRelations.Add(new Relation("oživel", false, false, false, new Entity(_characterList[2].EntityName), new Entity(_characterList[0].EntityName)));
+            _storyTimeline[2].Relations.Add(new Relation("žaloval", true, new Entity(_characterList[0].EntityName), new Entity(_characterList[1].EntityName)));
+            _storyTimeline[2].Relations.Add(new Relation("oživel", false, new Entity(_characterList[2].EntityName), new Entity(_characterList[0].EntityName)));
             _storyTimeline[2].StoryEventNotes.Add("Podrobnost 4");
             _storyTimeline[2].StoryEventNotes.Add("Podrobnost 5");
             _storyTimeline[2].StoryEventNotes.Add("Podrobnost 6");
+        }
+
+        [JsonConstructor]
+        public StoryViewModel(List<StoryEvent> storyevents, List<Entity> entitys)
+        {
+            _storyTimeline = storyevents;
+            _characterList = entitys;
         }
 
         public void AddNewMapMarker(Canvas canvas, System.Windows.Point click, string text)
@@ -70,13 +77,13 @@ namespace DiplomskoDelo
             double wide = canvas.ActualWidth;
             double high = canvas.ActualHeight;
 
-            activeEvent.StoryEventMapMarkers.Add(new MapMarker((float)(click.X / wide), (float)(click.Y / high), text));
+            activeEvent.MapMarkers.Add(new MapMarker((float)(click.X / wide), (float)(click.Y / high), text));
         }
 
         public void EditMapMarkerNote(string text)
         {
             var temp = ActiveMapMarker;
-            activeEvent.StoryEventMapMarkers[activeEvent.StoryEventMapMarkers.IndexOf(temp)].MapMarkerNote = activeMapMarker.MapMarkerNote = text;
+            activeEvent.MapMarkers[activeEvent.MapMarkers.IndexOf(temp)].MapMarkerNote = activeMapMarker.MapMarkerNote = text;
         }
 
         public void AddNewEventNote(string text)
@@ -182,12 +189,12 @@ namespace DiplomskoDelo
 
         public void DeleteMapmarker()
         {
-            activeEvent.StoryEventMapMarkers.Remove(activeMapMarker);
+            activeEvent.MapMarkers.Remove(activeMapMarker);
         }
 
         public void DeleteRelation()
         {
-            activeEvent.StoryEventRelations.Remove(activeRelation);
+            activeEvent.Relations.Remove(activeRelation);
         }
 
         public void EditStoryEvent(string title, string time)
@@ -226,7 +233,7 @@ namespace DiplomskoDelo
             }
             else
             {
-                ActiveEvent.StoryEventRelations.Add
+                ActiveEvent.Relations.Add
                       (
                  new Relation(
                       window.RelationName,
@@ -239,7 +246,7 @@ namespace DiplomskoDelo
                 );
             }
 
-            ((MainWindow)Application.Current.MainWindow).eventLogListBox.ItemsSource = activeEvent.StoryEventRelations;
+            ((MainWindow)Application.Current.MainWindow).eventLogListBox.ItemsSource = activeEvent.Relations;
 
             return;
         }
@@ -257,13 +264,13 @@ namespace DiplomskoDelo
             {
                 MessageBoxResult result = MessageBox.Show("Relation modification failed");
             }
-
-            activeRelation.RelationName = window.RelationName;
-
-            activeRelation.IsSelfTargeted = window.IsRelationSelfTargeted;
-            activeRelation.FirstEntity = _characterList[window.Entity1Index];
-            activeRelation.SecondEntity = _characterList[window.Entity2Index];
-
+            else
+            {
+                activeRelation.RelationName = window.RelationName;
+                activeRelation.IsSelfTargeted = window.IsRelationSelfTargeted;
+                activeRelation.FirstEntity = _characterList[window.Entity1Index];
+                activeRelation.SecondEntity = _characterList[window.Entity2Index];
+            }
             return;
         }
 
@@ -275,6 +282,7 @@ namespace DiplomskoDelo
         }
 
         //LASTNOSTI
+
         private ICommand mUpdater;
 
         //glavne podatkovne strukture
@@ -291,6 +299,7 @@ namespace DiplomskoDelo
         private Relation activeRelation;
         private MapMarker activeMapMarker;
 
+        [JsonIgnore]
         public ICommand UpdateCommand
         {
             get
