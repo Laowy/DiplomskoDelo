@@ -1,14 +1,12 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.Text.Json;
-using System.IO;
-using System.Collections.Generic;
 
 namespace DiplomskoDelo
 {
@@ -24,8 +22,9 @@ namespace DiplomskoDelo
         public MainWindow()
         {
             InitializeComponent();
-            //VM = new StoryViewModel();
+            VM = new StoryViewModel();
             this.DataContext = VM;
+
             /*
             VM.ActiveEvent = VM.StoryTimeline[0]; //this sets the first event in the timeline as active
             storyEventListBox.SelectedIndex = 0;//this too
@@ -59,16 +58,6 @@ namespace DiplomskoDelo
                     }
                 }
             }
-        }
-
-        public BitmapImage UrlToImageSource(string url)
-        {
-            var bitmapImage = new BitmapImage();
-            bitmapImage.BeginInit();
-            bitmapImage.UriSource = new Uri(url);
-            bitmapImage.EndInit();
-
-            return bitmapImage;
         }
 
         private void storyEventListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -109,6 +98,8 @@ namespace DiplomskoDelo
         private void editCharacterAttributeButton_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new textInputWindow(VM.ActiveAttribute);
+            dialog.Height = 300;
+            dialog.Width = 300;
             if (dialog.ShowDialog() == true)
             {
                 VM.EditEntityAttribute(dialog.EditedText);
@@ -144,6 +135,8 @@ namespace DiplomskoDelo
         private void addNewEntityButton_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new textInputWindow("");
+            dialog.Height = 300;
+            dialog.Width = 300;
             if (dialog.ShowDialog() == true)
             {
                 VM.AddNewEntity(dialog.EditedText);
@@ -154,6 +147,8 @@ namespace DiplomskoDelo
         private void editEntityButton_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new textInputWindow(VM.ActiveEntity.EntityName);
+            dialog.Height = 300;
+            dialog.Width = 300;
             if (dialog.ShowDialog() == true)
             {
                 VM.ActiveEntity.EntityName = dialog.EditedText;
@@ -175,6 +170,8 @@ namespace DiplomskoDelo
         private void addCharacterAttributeButton_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new textInputWindow("");
+            dialog.Height = 300;
+            dialog.Width = 300;
             if (dialog.ShowDialog() == true)
             {
                 VM.AddNewEntityAttribute(dialog.EditedText);
@@ -185,6 +182,7 @@ namespace DiplomskoDelo
         private void addNewStoryEventButton_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new StoryEventEditorWindow("", "");
+
             if (dialog.ShowDialog() == true)
             {
                 VM.AddStoryEvent(dialog.EventNameText, dialog.EventTimeText);
@@ -255,6 +253,8 @@ namespace DiplomskoDelo
         private void addEventNoteButton_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new textInputWindow("");
+            dialog.Height = 300;
+            dialog.Width = 300;
             if (dialog.ShowDialog() == true)
             {
                 VM.AddNewEventNote(dialog.EditedText);
@@ -265,6 +265,8 @@ namespace DiplomskoDelo
         private void editEventNoteButton_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new textInputWindow(VM.ActiveNote);
+            dialog.Height = 300;
+            dialog.Width = 300;
             if (dialog.ShowDialog() == true)
             {
                 VM.EditEventNote(dialog.EditedText);
@@ -275,6 +277,8 @@ namespace DiplomskoDelo
         private void editMapMarkerButton_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new textInputWindow(VM.ActiveMapMarker.MapMarkerNote);
+            dialog.Height = 300;
+            dialog.Width = 300;
             if (dialog.ShowDialog() == true)
             {
                 VM.EditMapMarkerNote(dialog.EditedText);
@@ -339,6 +343,7 @@ namespace DiplomskoDelo
 
         private void saveFileButton_Click(object sender, RoutedEventArgs e)
         {
+            //nastavlja se zunaj pred serializacijo
             VM.ActiveAttribute = null;
             VM.ActiveEntity = null;
             VM.ActiveEvent = null;
@@ -348,44 +353,63 @@ namespace DiplomskoDelo
 
             JSONconsoleBox.Text = JsonSerializer.Serialize<StoryViewModel>(VM);
 
-            SaveFileDialog savefile = new SaveFileDialog();
-            // set a default file name
-            savefile.FileName = "file.txt";
-            // set filters - this can be done in properties as well
-            savefile.Filter = "Text files (*.txt)|*.txt|JSON files (*.json)|*.json";
+            VM.SaveJsonToFile(JSONconsoleBox.Text);
 
-            if (savefile.ShowDialog() == true)
-            {
-                using (StreamWriter sw = new StreamWriter(savefile.FileName))
-                    sw.WriteLine(JSONconsoleBox.Text);
-            }
+            infoLabel.Content = "JSON file saved succesfully";
+        }
+
+        private void saveCompressedFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            //nastavlja se zunaj pred serializacijo
+            VM.ActiveAttribute = null;
+            VM.ActiveEntity = null;
+            VM.ActiveEvent = null;
+            VM.ActiveMapMarker = null;
+            VM.ActiveNote = null;
+            VM.ActiveRelation = null;
+
+            JSONconsoleBox.Text = JsonSerializer.Serialize<StoryViewModel>(VM);
+            VM.SaveJsonToCompressedFile(JSONconsoleBox.Text);
+
+            infoLabel.Content = "CSB file saved succesfully";
         }
 
         private void openFileButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Text files (*.txt)|*.txt|JSON files (*.json)|*.json";
-            if (ofd.ShowDialog() == true)
-            {
-                JSONconsoleBox.Text = File.ReadAllText(ofd.FileName);
-                VM = JsonSerializer.Deserialize<StoryViewModel>(JSONconsoleBox.Text);
+            JSONconsoleBox.Text = VM.ReadJson();
+            VM = JsonSerializer.Deserialize<StoryViewModel>(JSONconsoleBox.Text);
 
-                this.DataContext = VM;
-                VM.ActiveEvent = VM.StoryEvents[0]; //this sets the first event in the timeline as active
-                storyEventListBox.SelectedIndex = 0;//this too
-                VM.ActiveAttribute = null;
-                VM.ActiveEntity = null;
-                VM.ActiveEvent = null;
-                VM.ActiveMapMarker = null;
-                VM.ActiveNote = null;
-                VM.ActiveRelation = null;
+            this.DataContext = VM;
+            VM.ActiveEvent = VM.StoryEvents[0]; //this sets the first event in the timeline as active
+            storyEventListBox.SelectedIndex = 0;//this too
 
-                storyEventListBox.Items.Refresh();
-                eventLogListBox.Items.Refresh();
-                characterNotesListBox.Items.Refresh();
-                charactersListBox.Items.Refresh();
-                extraNotesListBox.Items.Refresh();
-            }
+            storyEventListBox.Items.Refresh();
+            eventLogListBox.Items.Refresh();
+            characterNotesListBox.Items.Refresh();
+            charactersListBox.Items.Refresh();
+            extraNotesListBox.Items.Refresh();
+
+            infoLabel.Content = "JSON file read succesfully";
+        }
+
+        private void openCompressedFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            JSONconsoleBox.Text = VM.ReadCompressedJson();
+
+            VM = JsonSerializer.Deserialize<StoryViewModel>(JSONconsoleBox.Text);
+
+            this.DataContext = VM;
+
+            VM.ActiveEvent = VM.StoryEvents[0]; //this sets the first event in the timeline as active
+            storyEventListBox.SelectedIndex = 0;//this too
+
+            storyEventListBox.Items.Refresh();
+            eventLogListBox.Items.Refresh();
+            characterNotesListBox.Items.Refresh();
+            charactersListBox.Items.Refresh();
+            extraNotesListBox.Items.Refresh();
+
+            infoLabel.Content = "CSB file read succesfully";
         }
     }
 }

@@ -17,9 +17,9 @@
             <TabItem x:Name="MapTab" Header="Map">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="19*" />
-                        <ColumnDefinition Width="128*" />
-                        <ColumnDefinition Width="49*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="5*" />
@@ -27,11 +27,14 @@
                         <RowDefinition Height="1*" />
                     </Grid.RowDefinitions>
                     <Rectangle Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Fill="AntiqueWhite" Margin="5" />
-                    <Image  Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="5" x:Name="mapImage" MouseLeftButtonDown="mapImage_MouseLeftButtonDown" Source="{Binding ActiveEvent.StoryEventMapSource}" Width="{Binding Path=ActualWidth, ElementName=mapCanvas}" Height="{Binding Path=ActualHeight, ElementName=mapCanvas}" Stretch="Fill" />
-                    <Canvas Grid.Column="0" Grid.RowSpan="2"  x:Name="mapCanvas"  Margin="5" Grid.ColumnSpan="2">
-                    </Canvas>
+                    <Image  Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="5"
+                            x:Name="mapImage" MouseLeftButtonDown="mapImage_MouseLeftButtonDown"
+                            Source="{Binding ActiveEvent.StoryEventMapSource}" Width="{Binding Path=ActualWidth, ElementName=mapCanvas}"
+                            Height="{Binding Path=ActualHeight, ElementName=mapCanvas}" Stretch="Fill" />
 
-                    <TextBlock x:Name="mapMarkerInfoBox" Text="{Binding ActiveMapMarker.MapMarkerNote}" Margin="5,5,5,5"  Grid.Column="2" Grid.Row="0" ></TextBlock>
+                    <Canvas Grid.Column="0" Grid.RowSpan="2"  x:Name="mapCanvas"  Margin="5" Grid.ColumnSpan="2" />
+                    <TextBlock x:Name="mapMarkerInfoBox" Text="{Binding ActiveMapMarker.MapMarkerNote}" Margin="5"
+                               TextWrapping="Wrap" Grid.Column="2" Grid.Row="0" />
                     <StackPanel Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" Background="AliceBlue">
                         <Button x:Name="editMapImageButton" Content="Edit Map Image" Margin="5" Click="editMapImageButton_Click" />
                         <Button x:Name="addMapMarkerButton" Content="Add mapmarker" Margin="5" Click="addMapMarkerButton_Click" />
@@ -63,9 +66,29 @@
                                 <TextBlock Text="{Binding EntityName}" TextWrapping="Wrap" />
                             </DataTemplate>
                         </ListBox.ItemTemplate>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Margin" Value="2" />
+                                <Setter Property="Background" Value="AliceBlue" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
                     </ListBox>
 
-                    <ListBox x:Name="characterNotesListBox" ItemsSource="{Binding ActiveEntity.EntityAttributes}" ScrollViewer.VerticalScrollBarVisibility="Visible" Background="AntiqueWhite" Grid.RowSpan="2" Margin="5,5,5,5" SelectionChanged="characterNotesListBox_SelectionChanged" Grid.Column="1">
+                    <ListBox x:Name="characterNotesListBox" ItemsSource="{Binding ActiveEntity.EntityAttributes}"
+                             ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             Background="AntiqueWhite" Grid.RowSpan="2"
+                             Margin="5" SelectionChanged="characterNotesListBox_SelectionChanged" Grid.Column="1">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Margin" Value="2" />
+                                <Setter Property="Background" Value="AliceBlue" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
                     </ListBox>
                     <Canvas x:Name="portraitCanvas" Background="AliceBlue" Grid.Column="3" Margin="5,5,5,5">
                         <Image x:Name="portraitImage" Source="{Binding ActiveEntity.EntityImageSource}" Width="{Binding Path=ActualWidth, ElementName=portraitCanvas}" Height="{Binding Path=ActualHeight, ElementName=portraitCanvas}" Stretch="Uniform" />
@@ -88,7 +111,6 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <ListBox x:Name="eventLogListBox" Background="AntiqueWhite" SelectionChanged="eventLogListBox_SelectionChanged" ItemsSource="{Binding ActiveEvent.Relations}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="5">
-
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="Margin" Value="5" />
@@ -98,7 +120,6 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-
                                     <TextBlock TextWrapping="Wrap" Text="{Binding FirstEntity.EntityName}" Margin="5" />
                                     <TextBlock Background="LightPink" TextWrapping="Wrap" Padding="2" Text="{Binding RelationName}" Margin="5" />
                                     <TextBlock TextWrapping="Wrap" Text="{Binding SecondEntity.EntityName}" Margin="5" />
@@ -127,7 +148,9 @@
                         <ColumnDefinition Width="3*" />
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
-                    <ListBox x:Name="extraNotesListBox" Background="AntiqueWhite" ItemsSource="{Binding ActiveEvent.StoryEventNotes}" SelectionChanged="extraNotesListBox_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="5">
+                    <ListBox x:Name="extraNotesListBox" Background="AntiqueWhite" ItemsSource="{Binding ActiveEvent.StoryEventNotes}"
+                             SelectionChanged="extraNotesListBox_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="5">
 
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
@@ -135,6 +158,11 @@
                                 <Setter Property="Background" Value="AliceBlue" />
                             </Style>
                         </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
                     </ListBox>
                     <StackPanel Grid.Column="1" Margin="5" Background="AliceBlue">
 
@@ -155,20 +183,23 @@
                         <RowDefinition Height="3*" />
                     </Grid.RowDefinitions>
                     <StackPanel>
-                        <Label Content="File" Margin="5" />
-                        <Button x:Name="openFileButton" Click="openFileButton_Click" Content="Open" Margin="5" Padding="5" HorizontalAlignment="Left" />
-                        <Label Content="File" Margin="5" />
-                        <Button x:Name="saveFileButton" Click="saveFileButton_Click" Content="Save" Margin="5" Padding="5" HorizontalAlignment="Left" />
+                        <Label Content="JSON File" Margin="5" />
+                        <Button x:Name="openFileButton" Click="openFileButton_Click" Content="Open JSON" Margin="5" />
+                        <Button x:Name="saveFileButton" Click="saveFileButton_Click" Content="Save as JSON" Margin="5" />
+                        <Label Content="Compressed File" Margin="5" />
+                        <Button x:Name="openCompressedFileButton" Click="openCompressedFileButton_Click" Content="Open CSB" Margin="5" />
+                        <Button x:Name="saveCompressedFileButton" Click="saveCompressedFileButton_Click" Content="Save as CSB" Margin="5" />
                     </StackPanel>
                     <Label Content="Raw JSON:" Grid.Column="1" />
+                    <Label x:Name="infoLabel"  Grid.Column="0" Grid.Row="1" />
                     <TextBox Grid.Column="1" Grid.RowSpan="2" Margin="5,30,5,5" Background="AntiqueWhite" x:Name="JSONconsoleBox" TextWrapping="Wrap" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" />
                 </Grid>
             </TabItem>
         </TabControl>
 
         <Grid Grid.Row="1">
-
-            <ListBox x:Name="storyEventListBox" ItemsSource="{Binding StoryEvents}" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionChanged="storyEventListBox_SelectionChanged" Margin="5">
+            <ListBox x:Name="storyEventListBox" ItemsSource="{Binding StoryEvents}" ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled" SelectionChanged="storyEventListBox_SelectionChanged" Margin="5">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal" IsItemsHost="True" />

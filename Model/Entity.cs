@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Text.Json.Serialization;
 
 namespace DiplomskoDelo
@@ -16,7 +11,7 @@ namespace DiplomskoDelo
 
         private List<string> attributes;//seznam artibutov in lastnosti
 
-        private string displayArtSource;//sistemska pot do vira slike za entiteto
+        private string displayArtSource;//relativna sistemska pot do vira slike za entiteto
 
         //Lastnosti
         public string EntityImageSource
@@ -29,6 +24,7 @@ namespace DiplomskoDelo
             //mutatorska funkcija
             set
             {
+                //pretvori relativno pot do slike v absolutno
                 displayArtSource = System.IO.Path.GetFullPath(value);
                 OnPropertyChanged("EntityImageSource");
             }

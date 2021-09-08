@@ -13,9 +13,9 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel>
-            <Label Content="Event name:" />
+            <Label Content="Event name/title:" />
             <TextBox x:Name="eventNameTextBox" Margin="5" />
-            <Label Content="Event time:" />
+            <Label Content="Event start time and end time:" />
             <TextBox x:Name="eventTimeTextBox" Margin="5" />
         </StackPanel>
         <Button Grid.Row="1" Click="Button_Click" Content="Save" Margin="5" Padding="5" HorizontalAlignment="Left" VerticalAlignment="Top" />

@@ -1,69 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using System.Windows.Input;
 using System.ComponentModel;
-using System.Drawing;
+
 using System.Windows;
-using System.Windows.Media.Imaging;
+
 using System.IO;
 using System.Windows.Controls;
 using System.Text.Json.Serialization;
+using Microsoft.Win32;
+using System.IO.Compression;
 
 namespace DiplomskoDelo
 {
     internal class StoryViewModel : INotifyPropertyChanged
     {
+        //LASTNOSTI
+
         //main storage objects
 
-        public List<StoryEvent> StoryEvents { get => (List<StoryEvent>)_storyTimeline; set { _storyTimeline = value; OnPropertyChanged("StoryEvents"); } }
-        public List<Entity> Entitys { get => (List<Entity>)_characterList; set { _characterList = value; OnPropertyChanged("Entitys"); } }
+        public List<StoryEvent> StoryEvents
+        {
+            get => (List<StoryEvent>)_storyTimeline;
+            set { _storyTimeline = value; OnPropertyChanged("StoryEvents"); }
+        }
+
+        public List<Entity> Entitys
+        {
+            get => (List<Entity>)_characterList;
+            set { _characterList = value; OnPropertyChanged("Entitys"); }
+        }
 
         //currently active units
-        public StoryEvent ActiveEvent { get => activeEvent; set { activeEvent = value; OnPropertyChanged("ActiveEvent"); } }
 
-        public Entity ActiveEntity { get => activeEntity; set { activeEntity = value; OnPropertyChanged("ActiveEntity"); } }
-        public Relation ActiveRelation { get => activeRelation; set { activeRelation = value; OnPropertyChanged("ActiveRelation"); } }
-        public string ActiveAttribute { get => activeAttribute; set { activeAttribute = value; OnPropertyChanged("ActiveAttribute"); } }
-        public string ActiveNote { get => activeNote; set { activeNote = value; OnPropertyChanged("ActiveNote"); } }
+        public StoryEvent ActiveEvent
+        {
+            get => activeEvent;
+            set { activeEvent = value; OnPropertyChanged("ActiveEvent"); }
+        }
 
-        public MapMarker ActiveMapMarker { get => activeMapMarker; set { activeMapMarker = value; OnPropertyChanged("ActiveMapMarker"); } }
+        public Entity ActiveEntity
+        {
+            get => activeEntity;
+            set { activeEntity = value; OnPropertyChanged("ActiveEntity"); }
+        }
+
+        public Relation ActiveRelation
+        {
+            get => activeRelation;
+            set { activeRelation = value; OnPropertyChanged("ActiveRelation"); }
+        }
+
+        public string ActiveAttribute
+        {
+            get => activeAttribute;
+            set { activeAttribute = value; OnPropertyChanged("ActiveAttribute"); }
+        }
+
+        public string ActiveNote
+        {
+            get => activeNote;
+            set { activeNote = value; OnPropertyChanged("ActiveNote"); }
+        }
+
+        public MapMarker ActiveMapMarker
+        {
+            get => activeMapMarker;
+            set { activeMapMarker = value; OnPropertyChanged("ActiveMapMarker"); }
+        }
 
         public StoryViewModel()
         {
             _storyTimeline = new List<StoryEvent>();
             _characterList = new List<Entity>();
-            /*
-            _characterList.Add(new Entity("Oseba 1"));
-            _characterList[0].EntityAttributes.Add("Prva lastnost osebe 1");
-            _characterList[0].EntityImageSource = @"C:\Users\Jakob\Desktop\FAXE\DiplomskoDelo\DiplomskoDelo\Images\Lixen token.png"; //relative path is ../Images/Lixen token.png
-            _characterList.Add(new Entity("Oseba 2"));
-            _characterList[1].EntityAttributes.Add("Pomemben podatek o osebi 2");
-            _characterList[1].EntityImageSource = @"https://picsum.photos/id/238/300/300";
-            _characterList.Add(new Entity("Zgodbi pomemben objekt"));
-            _characterList[2].EntityAttributes.Add("Lastnost objekta");
-            _characterList[2].EntityImageSource = @"https://picsum.photos/id/239/300/300";
-
-            _storyTimeline.Add(new StoryEvent("Prvi prizor", "torek"));
-            _storyTimeline[0].Relations.Add(new Relation("poiskal", false, new Entity(_characterList[0].EntityName), new Entity(_characterList[2].EntityName)));
-            _storyTimeline[0].Relations.Add(new Relation("razjezil", true, new Entity(_characterList[0].EntityName), new Entity(_characterList[1].EntityName)));
-            _storyTimeline[0].StoryEventNotes.Add("Podrobnost 1");
-
-            _storyTimeline.Add(new StoryEvent("Drugi prizor", "petek"));
-            _storyTimeline[1].Relations.Add(new Relation("izgubil", false, new Entity(_characterList[0].EntityName), new Entity(_characterList[2].EntityName)));
-            _storyTimeline[1].Relations.Add(new Relation("ubil", false, new Entity(_characterList[0].EntityName), new Entity(_characterList[1].EntityName)));
-            _storyTimeline[1].StoryEventNotes.Add("Podrobnost 2");
-            _storyTimeline[1].StoryEventNotes.Add("Podrobnost 3");
-
-            _storyTimeline.Add(new StoryEvent("Tretji prizor", "nedelja"));
-            _storyTimeline[2].Relations.Add(new Relation("žaloval", true, new Entity(_characterList[0].EntityName), new Entity(_characterList[1].EntityName)));
-            _storyTimeline[2].Relations.Add(new Relation("oživel", false, new Entity(_characterList[2].EntityName), new Entity(_characterList[0].EntityName)));
-            _storyTimeline[2].StoryEventNotes.Add("Podrobnost 4");
-            _storyTimeline[2].StoryEventNotes.Add("Podrobnost 5");
-            _storyTimeline[2].StoryEventNotes.Add("Podrobnost 6");
-            */
         }
 
         [JsonConstructor]
@@ -141,7 +152,7 @@ namespace DiplomskoDelo
         {
             if (_storyTimeline.IndexOf(activeEvent) == 0)//cist na zacetku
             {
-                MessageBox.Show("Event is already at the beninging");
+                MessageBox.Show("Event is already in the beninging");
             }
             else if (_storyTimeline.Count == 1)
             {
@@ -234,43 +245,74 @@ namespace DiplomskoDelo
             }
             else
             {
-                ActiveEvent.Relations.Add
-                      (
-                 new Relation(
-                      window.RelationName,
-                      false,
-                      false,
-                      window.IsRelationSelfTargeted,
-                      _characterList[window.Entity1Index],
-                      _characterList[window.Entity2Index]
-                      )
-                );
+                if (window.Entity2Index == -1)
+                {
+                    ActiveEvent.Relations.Add
+                          (
+                     new Relation(
+                          window.RelationName,
+                          false,
+                          false,
+                          window.IsRelationSelfTargeted,
+                          _characterList[window.Entity1Index],
+                          new Entity("SELF")
+                          )
+                    );
+                }
+                else
+                {
+                    ActiveEvent.Relations.Add
+                          (
+                     new Relation(
+                          window.RelationName,
+                          false,
+                          false,
+                          window.IsRelationSelfTargeted,
+                          _characterList[window.Entity1Index],
+                          _characterList[window.Entity2Index]
+                          )
+                     );
+                }
             }
-
-            ((MainWindow)Application.Current.MainWindow).eventLogListBox.ItemsSource = activeEvent.Relations;
 
             return;
         }
 
         public void EditRelation()
         {
-            RelationControlUI window = new RelationControlUI(activeRelation.RelationName, _characterList.IndexOf(activeRelation.FirstEntity), _characterList.IndexOf(activeRelation.SecondEntity), activeRelation.IsSelfTargeted);
+            //iskanje pravega indeksa za entitete v seznamu
+            int e1 = _characterList.IndexOf(_characterList.Where(
+                    p => p.EntityName == activeRelation.FirstEntity.EntityName).FirstOrDefault()),
+                e2 = _characterList.IndexOf(_characterList.Where(
+                    p => p.EntityName == activeRelation.SecondEntity.EntityName).FirstOrDefault());
+
+            //odpiranje okna za urejanje relacije
+            RelationControlUI window = new RelationControlUI(activeRelation.RelationName, e1, e2, activeRelation.IsSelfTargeted);
 
             window.Width = 400;
             window.Height = 300;
-            window.DataContext = this;
+            window.DataContext = this; //
             window.ShowDialog();//returns when window is closed
 
-            if (window.RelationName == "" || window.Entity1Index == -1)
+            if (window.RelationName == "" || window.Entity1Index == -1)//ce manjkajo podatki
             {
                 MessageBoxResult result = MessageBox.Show("Relation modification failed");
             }
             else
             {
+                //nastavljanje imena relacije, prve entitete in refleksivnosti
                 activeRelation.RelationName = window.RelationName;
-                activeRelation.IsSelfTargeted = window.IsRelationSelfTargeted;
                 activeRelation.FirstEntity = _characterList[window.Entity1Index];
-                activeRelation.SecondEntity = _characterList[window.Entity2Index];
+                activeRelation.IsSelfTargeted = window.IsRelationSelfTargeted;
+
+                if (ActiveRelation.IsSelfTargeted)
+                {
+                    activeRelation.SecondEntity = new Entity("SELF");//izjema v primeru refleksivnost
+                }
+                else
+                {
+                    activeRelation.SecondEntity = _characterList[window.Entity2Index];
+                }
             }
             return;
         }
@@ -282,18 +324,93 @@ namespace DiplomskoDelo
             return;
         }
 
-        //LASTNOSTI
+        public string ReadJson()
+        {
+            ActiveAttribute = null;
+            ActiveEntity = null;
+            ActiveEvent = null;
+            ActiveMapMarker = null;
+            ActiveNote = null;
+            ActiveRelation = null;
+            string ret = "";
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*";
+            if (ofd.ShowDialog() == true)
+            {
+                ret = File.ReadAllText(ofd.FileName);
+            }
+            return ret;
+        }
+
+        public string ReadCompressedJson()
+        {
+            ActiveAttribute = null;
+            ActiveEntity = null;
+            ActiveEvent = null;
+            ActiveMapMarker = null;
+            ActiveNote = null;
+            ActiveRelation = null;
+            string ret = "";
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "CSB files (*.csb)|*.csb";
+            if (ofd.ShowDialog() == true)
+            {
+                using (GZipStream instream = new GZipStream(File.OpenRead(ofd.FileName), CompressionMode.Decompress))
+                {
+                    using (StreamReader reader = new StreamReader(instream))
+                    {
+                        ret = reader.ReadToEnd();
+
+                        reader.Close();
+                    }
+                }
+            }
+            return ret;
+        }
+
+        public void SaveJsonToFile(string json)
+        {
+            SaveFileDialog savefile = new SaveFileDialog();
+            savefile.FileName = "story.json";
+            savefile.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*";
+
+            if (savefile.ShowDialog() == true)
+            {
+                using (StreamWriter sw = new StreamWriter(savefile.FileName))
+                    sw.WriteLine(json);
+            }
+        }
+
+        public void SaveJsonToCompressedFile(string json)
+        {
+            SaveFileDialog savefile = new SaveFileDialog();
+            savefile.FileName = "story.csb";
+            savefile.Filter = "Compressed storyboard files (*.csb)|*.csb";
+            if (savefile.ShowDialog() == true)
+            {
+                using (GZipStream outStream = new GZipStream(File.OpenWrite(savefile.FileName), CompressionMode.Compress))
+                {
+                    using (StreamWriter sw = new StreamWriter(outStream))
+                    {
+                        sw.Write(json);
+                        sw.Close();
+                    }
+                }
+            }
+        }
+
+        //POLJA
 
         private ICommand mUpdater;
 
         //glavne podatkovne strukture
-        private IList<StoryEvent> _storyTimeline;
 
+        private IList<StoryEvent> _storyTimeline;
         private IList<Entity> _characterList;
 
         //za trenutno izbrane objekte
-        private StoryEvent activeEvent;
 
+        private StoryEvent activeEvent;
         private Entity activeEntity;
         private string activeAttribute;
         private string activeNote;

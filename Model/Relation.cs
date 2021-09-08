@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 namespace DiplomskoDelo
@@ -23,20 +18,19 @@ namespace DiplomskoDelo
         private bool isFirstMany;// za opis števnosti entitete 1
         private bool isSecondMany;// za opis števnosti entitete 2
 
-        //konstruktor
+        //ne-JSON konstruktor
         public Relation(string name, bool isSelf, Entity first, Entity second)
         {
             if (isSelf)
             {
-                secondEntity = new Entity("SELF");
+                secondEntity = new Entity("SELF");//posebna vrednost
             }
             else
             {
                 secondEntity = second;
             }
-            isSelfTargeted = isSelf;
             relationName = name;
-
+            isSelfTargeted = isSelf;
             firstEntity = first;
         }
 

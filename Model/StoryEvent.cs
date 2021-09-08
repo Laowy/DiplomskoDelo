@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
 using System.Text.Json.Serialization;
 
 namespace DiplomskoDelo
@@ -15,16 +8,17 @@ namespace DiplomskoDelo
     {
         private string eventName; //ime dogodka
         private string timeAndDate; //čas dogajanja
-        private bool affectOthers; //ali dogodek vpliva na druge
-        private bool isProactive; //ali je dogodek proaktiven ali reaktiven
         private List<Relation> interactions; //seznam relacij oz. interakcij znotraj tega dogodka
         private List<string> notes; //seznam dodatnih zapiskov
 
+        //neobvezne - nullable vrednosti
 #nullable enable
-        private string? eventMap; // sistemska pot do slike zemljevida, ni obvezna
-        private List<MapMarker>? storyEventMapMarkers;
-
+        private string? eventMap; // relativna sistemska pot do slike zemljevida
+        private List<MapMarker>? storyEventMapMarkers; //seznam oznak na zemljevidu
 #nullable disable
+
+        private bool affectOthers; //ali dogodek vpliva na druge
+        private bool isProactive; //ali je dogodek proaktiven ali reaktiven
 
         public StoryEvent(string name, string timeDate)
         {
